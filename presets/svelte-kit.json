@@ -1,0 +1,30 @@
+{
+  "projectName": "svelte-kit-app",
+  "projectDescription": "SvelteKit app with Tailwind and Svelte stores",
+  "uiFramework": "svelte",
+  "metaFramework": "sveltekit",
+  "language": "typescript",
+  "styling": "tailwind",
+  "componentLibrary": "none",
+  "stateManagement": "svelte-stores",
+  "dataFetching": "none",
+  "formHandling": "zod",
+  "componentDocs": "none",
+  "auth": "none",
+  "testFramework": "vitest",
+  "e2eFramework": "playwright",
+  "monitoring": [],
+  "cicd": "netlify",
+  "ideTargets": ["cursor", "vscode-copilot"],
+  "skills": [
+    "plan-review",
+    "code-review",
+    "qa",
+    "ship",
+    "retro",
+    "performance-audit",
+    "accessibility-audit",
+    "component-audit",
+    "dependency-audit"
+  ]
+}

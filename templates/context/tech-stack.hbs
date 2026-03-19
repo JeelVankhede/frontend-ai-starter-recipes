@@ -1,0 +1,35 @@
+---
+description: Approved stack — do not add libraries without discussion
+---
+
+# Approved Tech Stack
+
+| Layer | Choice |
+|-------|--------|
+| UI | {{uiFramework}} |
+| Meta-framework | {{metaFramework}} |
+| Language | {{language}} |
+| Styling | {{styling}} |
+| Components | {{componentLibrary}} |
+| State | {{stateManagement}} |
+| Data fetching | {{dataFetching}} |
+| Forms | {{formHandling}} |
+| Component docs | {{componentDocs}} |
+| Auth model | {{auth}} |
+| Unit tests | {{testFramework}} |
+| E2E | {{e2eFramework}} |
+| CI/CD | {{cicd}} |
+
+## Monitoring
+
+{{#if monitoring.length}}
+{{#each monitoring}}
+- {{this}}
+{{/each}}
+{{else}}
+- _None selected_
+{{/if}}
+
+## Policy
+
+**Do not** introduce new UI/state/network libraries without team approval and a migration plan.

@@ -1,0 +1,57 @@
+---
+description: Master instructions for AI agents working on this frontend project
+alwaysApply: true
+---
+
+# Master Agent Instructions
+
+Welcome to the **{{projectName}}** codebase! This is a **{{uiFramework}}** application{{#if hasMetaFramework}} using **{{metaFramework}}**{{/if}}, written in **{{language}}**.
+
+{{projectDescription}}
+
+## Core Principles
+
+1. **Be concise:** No pleasantries. Skip to the code.
+2. **Read first, write second:** Inspect existing components, hooks, and patterns before adding new ones.
+3. **Plan-first approach:** For non-trivial UI or state changes, outline a short plan (components affected, state shape, a11y, responsive breakpoints).
+4. **Follow conventions:** Match established patterns for {{#if hasTailwind}}Tailwind, {{/if}}{{#if hasTanstackQuery}}data fetching, {{/if}}{{#if hasStorybook}}Storybook, {{/if}}and file layout. Do not introduce new libraries without explicit approval.
+
+## Tech Stack Overview
+
+- **UI:** {{uiFramework}}{{#if hasMetaFramework}} + {{metaFramework}}{{/if}}
+- **Language:** {{language}}
+- **Styling:** {{styling}}
+{{#if (neq componentLibrary "none")}}
+- **Component library:** {{componentLibrary}}
+{{/if}}
+{{#if (neq stateManagement "none")}}
+- **State:** {{stateManagement}}
+{{/if}}
+{{#if (neq dataFetching "none")}}
+- **Data fetching:** {{dataFetching}}
+{{/if}}
+{{#if (neq formHandling "none")}}
+- **Forms:** {{formHandling}}
+{{/if}}
+{{#if hasStorybook}}
+- **Docs:** Storybook
+{{/if}}
+{{#if hasAuth}}
+- **Auth model:** {{auth}}
+{{/if}}
+- **Tests:** {{testFramework}}{{#if hasPlaywright}} + Playwright{{/if}}{{#if hasCypress}} + Cypress{{/if}}
+
+For architectural maps, see `.ai/context/domain-map.md` and `.ai/context/tech-stack.md`.
+
+## Quality Gates
+
+Before finalizing work, run:
+
+- **Build:** `{{buildCommand}}`
+- **Lint:** `{{lintCommand}}`
+- **Unit / component tests:** `{{testCommand}}`
+{{#if (neq e2eCommand "")}}
+- **E2E:** `{{e2eCommand}}`
+{{/if}}
+
+If tests fail, fix the code or tests. Never leave the suite red.

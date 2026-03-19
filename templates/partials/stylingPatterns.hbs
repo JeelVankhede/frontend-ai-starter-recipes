@@ -1,0 +1,18 @@
+{{#if hasTailwind}}
+- Use Tailwind utilities first; limit `@apply` to repeatable design tokens.
+{{/if}}
+{{#if hasCSSModules}}
+- Name modules `*.module.css`; prefer BEM-like class names scoped by file.
+{{/if}}
+{{#if hasCSSInJS}}
+- Co-locate styles with components; avoid dynamic style objects in hot paths.
+{{/if}}
+{{#if hasSass}}
+- Prefer variables/mixins for tokens; avoid deep selector nesting.
+{{/if}}
+{{#if hasVanillaExtract}}
+- Define themes and contracts in `.css.ts` files; avoid inline sprinkles in loops.
+{{/if}}
+{{#if hasUnoCSS}}
+- Prefer attributify/shortcuts configured in `uno.config` over one-off magic strings.
+{{/if}}

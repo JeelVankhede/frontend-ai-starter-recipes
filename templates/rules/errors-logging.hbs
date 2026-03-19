@@ -1,0 +1,34 @@
+---
+description: Error boundaries, logging, and client observability
+---
+
+# Errors & Logging
+
+## User-facing errors
+
+{{#if isReact}}
+- Use error boundaries for route-level or feature-level failures; never swallow errors silently.
+{{/if}}
+{{#if isVue}}
+- Handle errors with `onErrorCaptured` / global handlers where configured.
+{{/if}}
+{{#if isSvelteKit}}
+- Provide `+error.svelte` pages and meaningful status messages.
+{{/if}}
+{{#if isAngular}}
+- Provide a custom `ErrorHandler` for centralized reporting.
+{{/if}}
+
+## Logging
+
+- Log structured context (route, user id if safe, correlation id) — **never** secrets, tokens, or PII.
+
+## Monitoring
+
+{{#if (includes monitoring "sentry")}}
+- Capture unhandled promise rejections; tag releases with version/commit.
+{{/if}}
+
+## Source maps
+
+- Upload source maps to your error tracker in production builds when privacy policy allows.

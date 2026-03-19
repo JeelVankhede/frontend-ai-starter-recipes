@@ -1,0 +1,34 @@
+---
+description: Frontend security: XSS, auth storage, dependencies
+---
+
+# Security
+
+## XSS
+
+{{#if isReact}}
+- Avoid `dangerouslySetInnerHTML`; if required, sanitize with a vetted library and narrow scope.
+{{/if}}
+{{#if isVue}}
+- Avoid `v-html` unless content is trusted or sanitized.
+{{/if}}
+{{#if isSvelte}}
+- Treat `{@html}` as privileged; sanitize and document threat model.
+{{/if}}
+
+## Auth tokens
+
+- Prefer **httpOnly** cookies for session refresh flows when backend supports it.
+- Do **not** store long-lived refresh tokens in `localStorage` unless explicitly accepted risk.
+
+## Dependencies
+
+- Run `npm audit` / tooling regularly; justify new dependencies (bundle + maintenance cost).
+
+## CSP
+
+- Prefer strict **Content-Security-Policy** compatible with your framework dev tooling.
+
+## Third-party scripts
+
+- Load analytics with async/defer; use SRI for CDN assets when applicable.

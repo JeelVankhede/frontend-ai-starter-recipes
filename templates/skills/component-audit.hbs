@@ -1,0 +1,15 @@
+---
+description: Component health — props, complexity, reuse
+---
+
+# Skill: Component Audit
+
+For changed or new components:
+
+1. **API clarity** — props named and typed; avoid boolean prop soup.
+2. **Size** — split files > ~250 lines or cyclomatic hotspots.
+3. **Reuse** — deduplicate copy-paste patterns into primitives/hooks.
+{{#if hasStorybook}}
+4. **Storybook** — default + edge states documented.
+{{/if}}
+5. **Dead code** — remove unused exports and stories.

@@ -1,0 +1,39 @@
+---
+description: Environment variables and configuration
+---
+
+# Environment
+
+{{#if isNextJS}}
+- Expose browser-safe variables with `NEXT_PUBLIC_*` only.
+{{/if}}
+{{#if isNuxt}}
+- Use `runtimeConfig` for server vs public values; document which keys are client-visible.
+{{/if}}
+{{#if isAngular}}
+- Use `environment.ts` files per build configuration; never commit secrets.
+{{/if}}
+{{#if isSvelteKit}}
+- Use SvelteKit modules (`$env/static/public`, etc.) for public vs private env; never leak server keys to the client bundle.
+{{/if}}
+{{#if isRemix}}
+- Follow Remix + Vite env patterns; only expose what loaders/actions need; document server-only variables.
+{{/if}}
+{{#if isAstro}}
+- Use `import.meta.env` with `PUBLIC_*` prefix for client-visible Astro variables.
+{{/if}}
+{{#if (and (eq metaFramework "none") (or isReact isVue isSvelte isSolid isPreact))}}
+- For Vite-based SPA stacks, use `VITE_*` prefixes for client-exposed values.
+{{/if}}
+
+## Files
+
+- Commit `.env.example` with dummy values; **never** commit real `.env` files.
+
+## Validation
+
+- Validate env at startup (Zod / framework helpers) to fail fast in CI and production.
+
+## Feature flags
+
+- Evaluate flags at stable boundaries (layout, route guard, provider) — not inside every leaf component.

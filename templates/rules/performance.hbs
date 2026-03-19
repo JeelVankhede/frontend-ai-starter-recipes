@@ -1,0 +1,35 @@
+---
+description: Performance, Core Web Vitals, and bundle discipline
+---
+
+# Performance
+
+## Targets
+
+- Aim for **good** Core Web Vitals on primary flows (LCP, INP, CLS).
+- Set a **bundle budget** policy (documented) for main entry and largest routes.
+
+## Loading strategy
+
+{{#if isNextJS}}
+- Prefer `next/image` with explicit sizes; lazy-load below-the-fold media.
+{{/if}}
+- Code-split **routes** and heavy components (`dynamic import`, framework equivalents).
+
+## Rendering
+
+{{#if isReact}}
+- Avoid unnecessary re-renders; measure before memoizing.
+{{/if}}
+
+## Lists
+
+- Virtualize long lists (table/grid) when item count routinely exceeds ~100 visible rows.
+
+## Fonts
+
+- Use `font-display: swap` or framework defaults; subset fonts when possible.
+
+## Networking
+
+- Debounce search inputs; cancel in-flight requests on unmount or param change when safe.

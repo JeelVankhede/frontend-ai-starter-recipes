@@ -1,0 +1,28 @@
+---
+description: SEO, metadata, and share previews
+---
+
+# SEO & Metadata
+
+{{#if hasMetaFramework}}
+- Ensure each public route defines **title** and **meta description**.
+{{else}}
+- Manage document title per route (router hooks or small helper).
+{{/if}}
+
+## Social previews
+
+- Provide **Open Graph** (`og:title`, `og:description`, `og:image`) for pages that are shared.
+- Add Twitter card tags when the product is distributed on X/Twitter.
+
+## Structured data
+
+- Use JSON-LD for entities you truly expose (products, articles); validate with Rich Results guidelines.
+
+## Canonical URLs
+
+- Avoid duplicate content across `www` / apex / trailing slash variants; set canonical where applicable.
+
+## Sitemaps & robots
+
+- Generate sitemap for indexable routes; keep `robots.txt` aligned with staging vs production.

@@ -1,0 +1,31 @@
+{
+  "projectName": "vue-nuxt-app",
+  "projectDescription": "Vue 3 with Nuxt, Pinia, and PrimeVue",
+  "uiFramework": "vue",
+  "metaFramework": "nuxt",
+  "language": "typescript",
+  "styling": "tailwind",
+  "componentLibrary": "primevue",
+  "stateManagement": "pinia",
+  "dataFetching": "tanstack-query",
+  "formHandling": "vee-validate",
+  "componentDocs": "storybook",
+  "auth": "session",
+  "testFramework": "vitest",
+  "e2eFramework": "cypress",
+  "monitoring": ["sentry"],
+  "cicd": "github-actions",
+  "ideTargets": ["cursor", "windsurf"],
+  "skills": [
+    "plan-review",
+    "code-review",
+    "qa",
+    "ship",
+    "document-release",
+    "retro",
+    "performance-audit",
+    "accessibility-audit",
+    "component-audit",
+    "dependency-audit"
+  ]
+}

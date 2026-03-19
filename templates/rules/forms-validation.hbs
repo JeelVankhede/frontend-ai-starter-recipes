@@ -1,0 +1,30 @@
+---
+description: Forms, validation UX, and error presentation
+---
+
+# Forms & Validation
+
+{{#if hasReactHookForm}}
+- Use `useForm` + `Controller` for complex inputs; prefer `zodResolver` when Zod is in stack.
+{{/if}}
+{{#if hasFormik}}
+- Keep initial values stable; use `validationSchema` or manual validation consistently.
+{{/if}}
+{{#if hasVeeValidate}}
+- Prefer composition API `useForm` / `useField`; align with Vue 3 patterns.
+{{/if}}
+{{#if hasAngularForms}}
+- Prefer reactive forms with typed controls; validators as pure functions where possible.
+{{/if}}
+{{#if hasZodForms}}
+- Single source of truth in Zod schemas; map server errors into field errors explicitly.
+{{/if}}
+
+## UX rules
+
+- Validate on **submit** for long forms; on **blur** for critical fields when it helps users.
+- Associate `<label>` with inputs; surface errors in text + `aria-describedby`.
+
+## Accessibility
+
+- Announce async form errors with `role="alert"` or live regions when needed.

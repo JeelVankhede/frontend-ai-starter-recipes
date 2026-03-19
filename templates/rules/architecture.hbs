@@ -1,0 +1,48 @@
+---
+description: Frontend architecture, folders, and layering
+globs: "**/*"
+---
+
+# Architecture
+
+## Directory layout
+
+{{#if isNextJS}}
+- Prefer **App Router** (`app/`) for routes, layouts, and server components where applicable.
+- Shared UI in `components/`; feature code under `app/(segments)/` or `src/features/` if you use a src layout.
+{{else if isNuxt}}
+- Pages in `pages/` or `app/` (Nuxt 3+); composables in `composables/`; plugins in `plugins/`.
+{{else if isSvelteKit}}
+- Routes in `src/routes/`; shared UI in `src/lib/components/`.
+{{else if isAngular}}
+- Feature modules or **standalone** building blocks under `src/app/`; reusable pieces in `src/app/shared/`.
+{{else}}
+- Feature-first folders under `src/features/<name>/` with `components/`, `hooks|composables/`, and `api/` as needed.
+- Shared primitives in `src/components/` and `src/lib/`.
+{{/if}}
+
+Primary paths in this project (tune to match your repo):
+
+- **Components:** `{{componentDir}}`
+- **Routes / pages:** `{{pagesDir}}`
+- **Global state (if any):** `{{storeDir}}`
+
+{{> componentPatterns}}
+
+## Layering
+
+1. **Presentation** — dumb UI, minimal logic, props/slots in, events out.
+2. **Application** — hooks/composables/services orchestrating user flows.
+3. **Data** — API clients, query hooks, DTO mappers (keep framework-agnostic where possible).
+
+## Barrel exports
+
+- Use `index.ts` sparingly at **feature boundaries**; avoid mega-barrels that harm tree-shaking.
+
+## Co-location
+
+- Prefer tests and styles next to the component when the team does so consistently.
+
+## Commands
+
+{{> buildCommands}}

@@ -1,0 +1,25 @@
+---
+description: Styling conventions, tokens, and responsive UI
+---
+
+# Styling
+
+{{> stylingPatterns}}
+
+## Responsive design
+
+- Design **mobile-first**; define breakpoints in one place (Tailwind config, tokens, or theme).
+- Avoid magic numbers in multiple files — centralize spacing and radii.
+
+## Dark mode
+
+- Support `prefers-color-scheme` and/or class-based toggles consistently.
+- Verify contrast for text, borders, and focus rings in both themes.
+
+## Z-index & stacking
+
+- Maintain a **small z-index scale** (e.g., dropdown < modal < toast) documented in tokens or CSS variables.
+
+## Motion
+
+- Respect `prefers-reduced-motion` for non-essential animations.

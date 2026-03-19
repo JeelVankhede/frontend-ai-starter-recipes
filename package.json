@@ -1,0 +1,80 @@
+{
+  "name": "frontend-ai-starter-recipes",
+  "version": "0.1.0",
+  "description": "Interactive CLI for generating AI agent instructions and workflows for frontend web projects",
+  "type": "module",
+  "main": "dist/cli.js",
+  "bin": {
+    "frontend-ai-starter-recipes": "./dist/cli.js",
+    "fare": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "templates",
+    "presets",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "start": "node dist/cli.js",
+    "prepublishOnly": "npm run build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "check:dist": "node scripts/check-dist-no-skill-identifier.js",
+    "test:pack": "npm run build && npm pack && node scripts/test-pack.js",
+    "docs:dev": "vitepress dev website",
+    "docs:build": "vitepress build website",
+    "docs:preview": "vitepress preview website"
+  },
+  "keywords": [
+    "cli",
+    "ai",
+    "cursor",
+    "claude",
+    "copilot",
+    "frontend",
+    "react",
+    "vue",
+    "svelte",
+    "angular",
+    "nextjs",
+    "vite",
+    "tailwind",
+    "agent",
+    "rules",
+    "windsurf"
+  ],
+  "author": "Jeel Vankhede <jeelvankhede@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JeelVankhede/frontend-ai-starter-recipes.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JeelVankhede/frontend-ai-starter-recipes/issues"
+  },
+  "homepage": "https://jeelvankhede.github.io/frontend-ai-starter-recipes/",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^8.3.2",
+    "chalk": "^5.6.2",
+    "commander": "^14.0.3",
+    "handlebars": "^4.7.8"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.9",
+    "@types/node": "^25.5.0",
+    "@vitest/coverage-v8": "^4.1.0",
+    "mermaid": "^11.13.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitepress": "^1.6.4",
+    "vitepress-plugin-mermaid": "^2.0.17",
+    "vitest": "^4.1.0"
+  }
+}

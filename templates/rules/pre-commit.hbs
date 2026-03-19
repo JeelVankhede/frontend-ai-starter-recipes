@@ -1,0 +1,21 @@
+---
+description: Pre-commit / pre-push quality gates
+---
+
+# Pre-Commit Checklist
+
+Before opening a PR:
+
+{{> buildCommands}}
+
+{{> testCommands}}
+
+- Run **typecheck** (`tsc --noEmit`, `vue-tsc`, or framework equivalent).
+- Run **lint** and **format** (Prettier) on changed files (`lint-staged` if configured).
+{{#if hasStorybook}}
+- Ensure Storybook builds or Chromatic (if used) is green for changed stories.
+{{/if}}
+
+## Optional CI extras
+
+- Lighthouse CI budgets on critical routes (document thresholds in repo).

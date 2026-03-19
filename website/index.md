@@ -1,0 +1,44 @@
+---
+layout: home
+
+hero:
+  name: FARE
+  text: Stop repeating your stack to AI
+  tagline: Opinionated rules, skills, and context for React, Vue, Svelte, Angular — npm package frontend-ai-starter-recipes, CLI fare.
+  actions:
+    - theme: brand
+      text: Start the story
+      link: /guide/1-the-problem
+    - theme: alt
+      text: View on GitHub
+      link: https://github.com/JeelVankhede/frontend-ai-starter-recipes
+
+features:
+  - title: Framework-aware rules
+    icon: 📐
+    details: Architecture, components, styling, routing, state, data fetching, forms, performance, accessibility, and SEO — tuned to your UI library and meta-framework.
+  - title: Frontend workflow skills
+    icon: 🧭
+    details: plan-review, code-review, QA, ship, performance-audit, accessibility-audit, component-audit, and more — repeatable quality without re-prompting.
+  - title: Multi-IDE adapters
+    icon: 🖥️
+    details: One canonical .ai/ tree becomes Cursor rules, Claude Code, Copilot instructions, Antigravity workflows, or Windsurf rules.
+---
+
+## How it works in 30 seconds
+
+```mermaid
+flowchart LR
+  A[You answer prompts] --> B[CLI renders templates]
+  B --> C[".ai/ rules + skills"]
+  C --> D[IDE-specific files]
+  D --> E[Agent follows your standards]
+```
+
+1. **Run** `npx frontend-ai-starter-recipes` (or `fare` if installed globally) and point at your project folder.
+2. **Get** a `.ai/` directory — your single source of truth — plus files your IDE understands.
+3. **Ship UI** with agents that already know your Tailwind vs CSS Modules, Zustand vs Pinia, Playwright vs Cypress, and more.
+
+::: tip Next step
+Continue with [The problem](/guide/1-the-problem) or jump to [Installation](/guide/3-installation).
+:::

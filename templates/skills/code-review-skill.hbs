@@ -1,0 +1,22 @@
+---
+description: Two-pass code review for frontend diffs
+---
+
+# Skill: Code Review
+
+Perform a **two-pass** review of the current branch vs default branch.
+
+## Pass 1 — Blocking
+
+- Security (XSS, unsafe HTML, token storage)
+- Auth/session edge cases
+- Data correctness and error handling
+- Accessibility regressions (labels, roles, focus)
+- Performance foot-guns (unnecessary re-renders, huge bundles)
+
+## Pass 2 — Nits
+
+- Naming, file placement, duplication
+- Test coverage gaps for new logic
+
+Use `.ai/skills/code-review/checklist.md` as the authoritative list.

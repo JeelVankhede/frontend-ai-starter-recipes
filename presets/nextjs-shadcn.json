@@ -1,0 +1,31 @@
+{
+  "projectName": "next-shadcn-app",
+  "projectDescription": "Next.js application with Tailwind and shadcn/ui",
+  "uiFramework": "react",
+  "metaFramework": "nextjs",
+  "language": "typescript",
+  "styling": "tailwind",
+  "componentLibrary": "shadcn",
+  "stateManagement": "zustand",
+  "dataFetching": "tanstack-query",
+  "formHandling": "react-hook-form",
+  "componentDocs": "storybook",
+  "auth": "oauth2-provider",
+  "testFramework": "vitest",
+  "e2eFramework": "playwright",
+  "monitoring": ["sentry", "posthog"],
+  "cicd": "vercel",
+  "ideTargets": ["cursor", "claude-code", "vscode-copilot"],
+  "skills": [
+    "plan-review",
+    "code-review",
+    "qa",
+    "ship",
+    "document-release",
+    "retro",
+    "performance-audit",
+    "accessibility-audit",
+    "component-audit",
+    "dependency-audit"
+  ]
+}

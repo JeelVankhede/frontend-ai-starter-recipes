@@ -1,0 +1,37 @@
+---
+description: Unit, component, and E2E testing standards
+---
+
+# Testing
+
+{{> testCommands}}
+
+## Unit & component
+
+- Prefer **Testing Library** queries that reflect user-visible behavior (`getByRole`, `getByLabelText`).
+- Use `userEvent` over `fireEvent` when available.
+- Co-locate tests as `*.test.ts(x)` / `*.spec.ts` consistent with repo convention.
+
+## Mocking
+
+- Mock network at the boundary (**MSW** or fetch mocks) instead of stubbing every component.
+
+## E2E
+
+{{#if hasPlaywright}}
+- Prefer stable selectors (`getByRole`, `data-testid` only when necessary).
+- Run against realistic auth states; reset storage between tests.
+{{/if}}
+{{#if hasCypress}}
+- Avoid arbitrary waits; use assertions and retry-friendly matchers.
+{{/if}}
+
+## Storybook
+
+{{#if hasStorybook}}
+- Each complex component should have at least a **default** story + primary variants.
+{{/if}}
+
+## Coverage
+
+- Cover critical user paths and edge cases; do not chase 100% line coverage blindly.

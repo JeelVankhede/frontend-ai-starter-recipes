@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: CI Node ${{ matrix.node-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run check:dist
+      - run: npm test
+      - run: npm run docs:build
+      - name: Test packed package (smoke)
+        run: |
+          npm pack
+          PACK="${{ github.workspace }}/$(ls frontend-ai-starter-recipes-*.tgz)"
+          cd "$(mktemp -d)"
+          npm init -y
+          npm install "$PACK"
+          npx fare --help
+          npx fare --preset react-vite-tailwind --output ./out
+          test -f out/.ai/AGENT.md

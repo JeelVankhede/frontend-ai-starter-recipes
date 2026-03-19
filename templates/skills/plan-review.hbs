@@ -1,0 +1,22 @@
+---
+description: Architecture / UX plan review before implementation (no code)
+---
+
+# Skill: Plan Review
+
+Use this **before** writing substantial UI or state changes for **{{projectName}}**.
+
+## Checklist
+
+1. **Problem & scope** — user story, acceptance criteria, out-of-scope items.
+2. **UI decomposition** — components affected (`{{componentDir}}`), new vs reused.
+3. **State & data** — what lives in {{stateManagement}} / {{dataFetching}}; cache keys if using TanStack/SWR/Apollo.
+4. **Routing** — routes touched (`{{pagesDir}}`), deep links, guards/middleware.
+5. **A11y** — focus order, keyboard path, live regions for async feedback.
+6. **Responsive** — breakpoints, overflow, touch targets.
+7. **Performance** — lazy boundaries, images, bundle impact of new deps.
+8. **Tests** — unit/component cases; E2E smoke if critical path.
+
+## Output
+
+- **Approve** with summarized decisions, or **Request changes** with concrete gaps.

@@ -1,0 +1,42 @@
+---
+description: State management boundaries and patterns
+---
+
+# State Management
+
+{{#if (eq stateManagement "none")}}
+- Prefer **local component state** and framework primitives (Context sparingly).
+- Avoid prop drilling more than 2–3 levels — lift state or use composition.
+{{/if}}
+
+{{#if hasRedux}}
+- Use **Redux Toolkit** slices; colocate slice + selectors; avoid large monolithic stores.
+- Prefer RTK Query only if selected as data layer; otherwise keep queries separate.
+{{/if}}
+{{#if hasZustand}}
+- One store per domain; export selectors; avoid storing non-serializable objects unless intentional.
+{{/if}}
+{{#if hasJotai}}
+- Prefer atoms per concern; derive with `atom` + read-only dependencies.
+{{/if}}
+{{#if hasRecoil}}
+- Avoid cross-atom cycles; document atom families for lists.
+{{/if}}
+{{#if hasPinia}}
+- Setup stores with `defineStore`; prefer composition-style stores for complex domains.
+{{/if}}
+{{#if hasNgRx}}
+- Actions/reducers/effects separated; selectors for derived data; keep facades thin.
+{{/if}}
+{{#if hasSvelteStores}}
+- Use `writable` + `derived`; unsubscribe in `onDestroy` when subscribing manually.
+{{/if}}
+{{#if hasMobX}}
+- Prefer `observer` boundaries; keep actions explicit; avoid mutating observables outside actions.
+{{/if}}
+
+## SSR / hydration
+
+{{#if hasMetaFramework}}
+- Ensure server and client render **consistent initial state**; avoid reading `window` during first paint on server bundles.
+{{/if}}

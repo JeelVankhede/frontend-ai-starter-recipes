@@ -1,0 +1,32 @@
+---
+description: Quality pass — build, test, a11y, and basic perf signals
+---
+
+# Skill: QA
+
+Run the full local quality gate for **{{projectName}}**.
+
+## Steps
+
+1. `{{buildCommand}}`
+2. `{{lintCommand}}`
+3. `{{testCommand}}`
+{{#if (neq e2eCommand "")}}
+4. `{{e2eCommand}}` (smoke subset if slow)
+{{/if}}
+5. **Accessibility** — run axe (browser extension or CI) on primary flows
+6. **Lighthouse** (optional) — performance + a11y + best-practices on key URL
+7. **Visual** — spot-check responsive breakpoints
+
+## Scorecard
+
+| Check | Pass/Fail | Notes |
+|-------|-----------|-------|
+| Build | | |
+| Lint | | |
+| Unit tests | | |
+{{#if (neq e2eCommand "")}}
+| E2E | | |
+{{/if}}
+| Axe | | |
+| Lighthouse | | |

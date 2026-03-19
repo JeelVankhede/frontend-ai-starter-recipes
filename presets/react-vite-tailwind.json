@@ -1,0 +1,31 @@
+{
+  "projectName": "react-vite-app",
+  "projectDescription": "React SPA with Vite, Tailwind, and modern data layer",
+  "uiFramework": "react",
+  "metaFramework": "none",
+  "language": "typescript",
+  "styling": "tailwind",
+  "componentLibrary": "shadcn",
+  "stateManagement": "zustand",
+  "dataFetching": "tanstack-query",
+  "formHandling": "react-hook-form",
+  "componentDocs": "storybook",
+  "auth": "none",
+  "testFramework": "vitest",
+  "e2eFramework": "playwright",
+  "monitoring": ["sentry"],
+  "cicd": "github-actions",
+  "ideTargets": ["cursor", "claude-code", "vscode-copilot", "antigravity", "windsurf"],
+  "skills": [
+    "plan-review",
+    "code-review",
+    "qa",
+    "ship",
+    "document-release",
+    "retro",
+    "performance-audit",
+    "accessibility-audit",
+    "component-audit",
+    "dependency-audit"
+  ]
+}

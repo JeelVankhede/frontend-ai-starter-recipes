@@ -1,0 +1,19 @@
+{{#if isReact}}
+- Prefer function components; colocate small presentational pieces next to features.
+- Extract reusable logic into custom hooks (`useThing`) in `src/hooks/` or feature folders.
+{{/if}}
+{{#if isVue}}
+- Prefer `<script setup>` and composables in `src/composables/` or feature folders.
+{{/if}}
+{{#if isSvelte}}
+- Prefer small `.svelte` files; shared logic in `src/lib/` or `src/stores/`.
+{{/if}}
+{{#if isAngular}}
+- Standalone components by default; services for shared logic; keep templates lean.
+{{/if}}
+{{#if isSolid}}
+- Fine-grained reactivity; avoid unnecessary wrappers; colocate route-specific UI.
+{{/if}}
+{{#if isPreact}}
+- Match React patterns where applicable; mind bundle size vs React-only APIs.
+{{/if}}

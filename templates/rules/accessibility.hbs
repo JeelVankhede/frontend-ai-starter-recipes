@@ -1,0 +1,28 @@
+---
+description: Accessibility (a11y) baseline for UI work
+---
+
+# Accessibility
+
+## Baseline
+
+- Meet **WCAG 2.1 AA** for primary user journeys where feasible.
+- Prefer **semantic HTML** (`button`, `nav`, `main`, `header`, `section`) over div-only layouts.
+
+## Keyboard
+
+- All interactive controls reachable via **Tab**; visible **focus rings** (do not remove without replacement).
+- Modals trap focus and return focus on close.
+
+## ARIA
+
+- Use ARIA only when semantics are insufficient; prefer native elements first.
+
+## Color & motion
+
+- Text contrast **≥ 4.5:1** for body copy; test states (hover, disabled, error).
+- Honor `prefers-reduced-motion`.
+
+## Testing
+
+- Complement automated checks (axe) with **keyboard-only** passes for new flows.

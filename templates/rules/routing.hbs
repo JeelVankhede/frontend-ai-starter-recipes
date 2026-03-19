@@ -1,0 +1,35 @@
+---
+description: Routing, layouts, and navigation patterns
+---
+
+# Routing
+
+{{#if isNextJS}}
+- Prefer nested layouts in `app/`; use `loading.tsx` and `error.tsx` where appropriate.
+- Keep **server vs client** component boundaries explicit (`'use client'` only when needed).
+{{/if}}
+{{#if isRemix}}
+- Use nested routes + `Outlet`; loaders/actions own data boundaries.
+{{/if}}
+{{#if isNuxt}}
+- Leverage `definePageMeta`, middleware, and typed routes when enabled.
+{{/if}}
+{{#if isSvelteKit}}
+- Use `+layout` / `+page` files; loaders for data; `+error` pages for failures.
+{{/if}}
+{{#if isAngular}}
+- Configure routes in a single module or route config; use lazy-loaded feature routes.
+{{/if}}
+{{#if (eq metaFramework "none")}}
+{{#if (or isReact isVue)}}
+- Keep route config centralized; lazy-load heavy screens.
+{{/if}}
+{{/if}}
+
+## Error & empty states
+
+- Every route should have a purposeful **404/empty** experience and a **route-level error** boundary where the framework supports it.
+
+## Focus management
+
+- Move focus logically on route changes for accessibility (especially modals and wizards).

@@ -1,0 +1,34 @@
+---
+description: Human-maintained map of product domains and folders
+---
+
+# Domain Map
+
+> Edit this file so agents understand **what lives where** in **{{projectName}}**.
+
+## System context
+
+{{projectDescription}}
+
+## Key directories
+
+| Area | Path | Notes |
+|------|------|-------|
+| UI components | `{{componentDir}}` | Shared primitives vs feature widgets |
+| Routes / pages | `{{pagesDir}}` | Entry points for navigation |
+{{#if (neq stateManagement "none")}}
+| Global state | `{{storeDir}}` | Stores, slices, or providers |
+{{/if}}
+| API / data | `src/api/` or `src/services/` | HTTP clients, DTOs |
+
+## Domains
+
+_List product areas (e.g., Auth, Billing, Dashboard) and their owning folders._
+
+| Domain | Folder | Primary routes |
+|--------|--------|----------------|
+| _Example_ | `src/features/billing/` | `/billing` |
+
+## Pitfalls
+
+- Document known sharp edges (legacy pages, experimental flags, SSR constraints).

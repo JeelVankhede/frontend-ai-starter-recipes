@@ -1,0 +1,44 @@
+---
+description: Component design, composition, and framework idioms
+---
+
+# Component Patterns
+
+## Composition
+
+- Prefer **small, focused components** over large “god” components.
+- Push conditional rendering and side effects **down** when it improves readability.
+
+{{> componentPatterns}}
+
+## Props & API surface
+
+{{#if isReact}}
+- Prefer explicit prop types (TypeScript) and discriminated unions for variant props.
+- Avoid anonymous inline objects as props in hot paths; stabilize with `useMemo` when needed.
+{{/if}}
+{{#if isVue}}
+- Use `defineProps` + `withDefaults` where appropriate; emit explicit events with `defineEmits`.
+{{/if}}
+{{#if isSvelte}}
+- Prefer `export let` / `$props()` runes (Svelte 5) consistently across the codebase.
+{{/if}}
+{{#if isAngular}}
+- Prefer `input()` / `output()` signals for new code when the project has adopted them.
+{{/if}}
+
+## Lists & keys
+
+{{#if isReact}}
+- Stable `key` values for lists; never use array index when order can change.
+{{/if}}
+
+## Side effects
+
+- Keep data fetching in **dedicated hooks/composables/effects**, not scattered in leaf components unless trivial.
+
+## Performance guardrails
+
+{{#if isReact}}
+- Use `React.memo` / `useCallback` / `useMemo` **only** when profiling shows benefit.
+{{/if}}

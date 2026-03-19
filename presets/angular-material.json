@@ -1,0 +1,31 @@
+{
+  "projectName": "angular-material-app",
+  "projectDescription": "Angular workspace with Angular Material and NgRx",
+  "uiFramework": "angular",
+  "metaFramework": "none",
+  "language": "typescript",
+  "styling": "sass",
+  "componentLibrary": "angular-material",
+  "stateManagement": "ngrx",
+  "dataFetching": "none",
+  "formHandling": "angular-forms",
+  "componentDocs": "none",
+  "auth": "jwt-client",
+  "testFramework": "jest",
+  "e2eFramework": "cypress",
+  "monitoring": ["datadog-rum"],
+  "cicd": "gitlab-ci",
+  "ideTargets": ["cursor", "claude-code", "antigravity"],
+  "skills": [
+    "plan-review",
+    "code-review",
+    "qa",
+    "ship",
+    "document-release",
+    "retro",
+    "performance-audit",
+    "accessibility-audit",
+    "component-audit",
+    "dependency-audit"
+  ]
+}
