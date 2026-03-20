@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: FARE
+  name: <span class="decorate">F</span>rontend-<span class="decorate">A</span>i-starter-<span class="decorate">RE</span>cipes
   text: Stop repeating your stack to AI
   tagline: Opinionated rules, skills, and context for React, Vue, Svelte, Angular — npm package frontend-ai-starter-recipes, CLI fare.
   actions:
