@@ -1,0 +1,45 @@
+---
+description: Prepare frontend work for release or handoff
+---
+
+# Ship
+
+## Stage Goal
+
+Prepare approved frontend work for release, PR review, or handoff.
+
+## Inputs Needed
+
+- Final diff or artifact list.
+- Test output and manual QA notes.
+- Known limitations.
+- Rollback considerations.
+- Generated output review when `.ai/` templates changed.
+
+## AI Behavior Expected
+
+- Summarize user-visible behavior and changed files.
+- Provide validation notes with exact commands.
+- Draft release notes when behavior or generated output changes.
+- Call out breaking changes or output-path changes.
+- Identify rollback steps when relevant.
+- Record source mappings after Fare templates are actually promoted and released.
+
+## AI Behavior Forbidden
+
+- Claiming release readiness while blockers remain.
+- Omitting known limitations or skipped checks.
+- Marking engineering templates shipped before Fare release.
+- Skipping adapter review for generated-output changes.
+
+## Output Expected
+
+- Change summary.
+- Validation notes.
+- Release notes draft.
+- Breaking-change callout.
+- Rollback notes.
+
+## Quality Bar
+
+Ship is complete when reviewers can see what changed, how it was validated, what risks remain, and how to recover if needed.

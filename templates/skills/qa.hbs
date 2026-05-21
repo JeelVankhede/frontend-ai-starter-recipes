@@ -6,6 +6,8 @@ description: Quality pass — build, test, a11y, and basic perf signals
 
 Run the full local quality gate for **{{projectName}}**.
 
+Use `.ai/lifecycle/test.md` to choose checks proportional to the changed user flow.
+
 ## Steps
 
 1. `{{buildCommand}}`
@@ -17,6 +19,7 @@ Run the full local quality gate for **{{projectName}}**.
 5. **Accessibility** — run axe (browser extension or CI) on primary flows
 6. **Lighthouse** (optional) — performance + a11y + best-practices on key URL
 7. **Visual** — spot-check responsive breakpoints
+8. **Generated output** — if `.ai/` templates changed, generate a sample project and review adapters
 
 ## Scorecard
 
@@ -30,3 +33,10 @@ Run the full local quality gate for **{{projectName}}**.
 {{/if}}
 | Axe | | |
 | Lighthouse | | |
+| Generated output / adapters | | |
+
+## Output
+
+- Commands run and results.
+- Manual QA notes.
+- Untested areas and residual risk.

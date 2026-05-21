@@ -6,6 +6,8 @@ description: Architecture / UX plan review before implementation (no code)
 
 Use this **before** writing substantial UI or state changes for **{{projectName}}**.
 
+Start with `.ai/lifecycle/think.md`, then check the proposed plan against `.ai/lifecycle/plan.md`.
+
 ## Checklist
 
 1. **Problem & scope** — user story, acceptance criteria, out-of-scope items.
@@ -16,7 +18,15 @@ Use this **before** writing substantial UI or state changes for **{{projectName}
 6. **Responsive** — breakpoints, overflow, touch targets.
 7. **Performance** — lazy boundaries, images, bundle impact of new deps.
 8. **Tests** — unit/component cases; E2E smoke if critical path.
+9. **Adapter/generated output** — if `.ai/` templates change, name adapter files to review.
+
+## Stop Conditions
+
+- The plan changes public routing, auth/session behavior, or shared state without naming user impact.
+- The plan adds dependencies without approval.
+- Tests or accessibility checks are missing for changed interactive behavior.
 
 ## Output
 
-- **Approve** with summarized decisions, or **Request changes** with concrete gaps.
+- **Approve** with summarized decisions, file impact, risks, and validation path.
+- **Request changes** with concrete gaps and the lifecycle stage that must be revisited.

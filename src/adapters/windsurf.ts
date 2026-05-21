@@ -6,6 +6,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import chalk from 'chalk';
 import type { FileWriter } from '../writer.js';
+import { readLifecycleContent, removeFrontmatter } from './lifecycle.js';
 
 export async function generateWindsurf(outputDir: string, writer: FileWriter) {
   const aiDir = path.join(outputDir, '.ai');
@@ -15,6 +16,8 @@ export async function generateWindsurf(outputDir: string, writer: FileWriter) {
 
     const agentContent = await fs.readFile(path.join(aiDir, 'AGENT.md'), 'utf-8');
     mergedContent += removeFrontmatter(agentContent) + '\n\n';
+
+    mergedContent += await readLifecycleContent(aiDir);
 
     const rulesDir = path.join(aiDir, 'rules');
     try {
@@ -34,8 +37,4 @@ export async function generateWindsurf(outputDir: string, writer: FileWriter) {
   } catch (err) {
     console.error(chalk.red('Failed to generate Windsurf config:'), err);
   }
-}
-
-function removeFrontmatter(content: string) {
-  return content.replace(/^---\n[\s\S]*?\n---\n+/, '');
 }

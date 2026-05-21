@@ -32,6 +32,10 @@ describe('CLI preset e2e', () => {
     const agent = await fs.readFile(path.join(out, '.ai', 'AGENT.md'), 'utf-8');
     expect(agent.length).toBeGreaterThan(100);
     expect(agent).toMatch(/react|React|Vite|vite/i);
+    const think = await fs.readFile(path.join(out, '.ai', 'lifecycle', 'think.md'), 'utf-8');
+    const reflect = await fs.readFile(path.join(out, '.ai', 'lifecycle', 'reflect.md'), 'utf-8');
+    expect(think).toMatch(/Think/);
+    expect(reflect).toMatch(/Reflect/);
   });
 
   it('exits non-zero for missing preset', () => {

@@ -13,8 +13,9 @@ Welcome to the **{{projectName}}** codebase! This is a **{{uiFramework}}** appli
 
 1. **Be concise:** No pleasantries. Skip to the code.
 2. **Read first, write second:** Inspect existing components, hooks, and patterns before adding new ones.
-3. **Plan-first approach:** For non-trivial UI or state changes, outline a short plan (components affected, state shape, a11y, responsive breakpoints).
-4. **Follow conventions:** Match established patterns for {{#if hasTailwind}}Tailwind, {{/if}}{{#if hasTanstackQuery}}data fetching, {{/if}}{{#if hasStorybook}}Storybook, {{/if}}and file layout. Do not introduce new libraries without explicit approval.
+3. **Use the lifecycle:** Follow `.ai/lifecycle/think.md`, `plan.md`, `build.md`, `review.md`, `test.md`, `ship.md`, and `reflect.md` for non-trivial work.
+4. **Plan-first approach:** For UI, routing, state, data, or accessibility changes, outline affected components, state/data ownership, a11y, responsive behavior, risks, and tests before implementation.
+5. **Follow conventions:** Match established patterns for {{#if hasTailwind}}Tailwind, {{/if}}{{#if hasTanstackQuery}}data fetching, {{/if}}{{#if hasStorybook}}Storybook, {{/if}}and file layout. Do not introduce new libraries without explicit approval.
 
 ## Tech Stack Overview
 
@@ -42,6 +43,23 @@ Welcome to the **{{projectName}}** codebase! This is a **{{uiFramework}}** appli
 - **Tests:** {{testFramework}}{{#if hasPlaywright}} + Playwright{{/if}}{{#if hasCypress}} + Cypress{{/if}}
 
 For architectural maps, see `.ai/context/domain-map.md` and `.ai/context/tech-stack.md`.
+
+## Lifecycle Contract
+
+- **Think:** inspect routes, components, styling, state, data fetching, forms, tests, and constraints before proposing work.
+- **Plan:** name affected files, state/data boundaries, risks, tradeoffs, and validation steps.
+- **Build:** implement only the approved frontend scope; avoid unrelated rewrites and speculative abstractions.
+- **Review:** check correctness, accessibility, performance, styling consistency, maintainability, and adapter output.
+- **Test:** run or define unit/component, E2E, accessibility, responsive, and manual checks proportional to risk.
+- **Ship:** summarize behavior, validation, release notes, breaking changes, and rollback concerns.
+- **Reflect:** capture repeated issues, missing template guidance, and follow-up tasks.
+
+## Must Avoid
+
+- Runtime references to `engineering-research-repo`.
+- Unrelated route, component, styling, state, or data-fetching rewrites.
+- New dependencies or architecture layers without explicit approval.
+- Claims that tests, accessibility checks, or adapter checks passed without evidence.
 
 ## Quality Gates
 

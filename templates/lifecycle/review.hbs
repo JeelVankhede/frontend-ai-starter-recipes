@@ -1,0 +1,43 @@
+---
+description: Self-review frontend changes before presenting them
+---
+
+# Review
+
+## Stage Goal
+
+Self-review frontend changes for correctness, usability, accessibility, maintainability, and adapter consistency.
+
+## Inputs Needed
+
+- Changed files and diff.
+- Acceptance criteria.
+- Relevant `.ai/rules/` guidance.
+- Test output or validation notes.
+- Generated adapter output when templates or `.ai/` files changed.
+
+## AI Behavior Expected
+
+- Check behavior against the original goal and user flow.
+- Review edge cases: loading, error, empty, disabled, auth/session, and navigation states.
+- Review accessibility: labels, roles, focus order, keyboard path, contrast, and motion.
+- Review performance: unnecessary re-renders, bundle impact, image/media handling, and expensive effects.
+- Review maintainability: naming, file placement, duplication, and consistency with project patterns.
+- Review adapter output consistency when generated instructions changed.
+
+## AI Behavior Forbidden
+
+- Reporting only what changed.
+- Ignoring failing, skipped, or missing tests.
+- Treating style preference as correctness.
+- Marking generated templates ready without checking adapter visibility.
+
+## Output Expected
+
+- Findings ordered by severity.
+- Test gaps or residual risk.
+- Clear ready/not-ready judgment.
+
+## Quality Bar
+
+Review is complete when meaningful frontend risks have been checked and known gaps are explicit.

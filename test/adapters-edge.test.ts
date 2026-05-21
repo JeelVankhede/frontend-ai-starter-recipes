@@ -10,6 +10,13 @@ import { generateVsCodeCopilot } from '../src/adapters/vscode-copilot.js';
 import { generateWindsurf } from '../src/adapters/windsurf.js';
 import { generateAntigravity } from '../src/adapters/antigravity.js';
 
+function expectCursorGlobs(content: string, patterns: string[]) {
+  expect(content).toContain(
+    ['globs:', ...patterns.map((pattern) => `  - ${JSON.stringify(pattern)}`)].join('\n'),
+  );
+  expect(content).not.toContain('globs: "');
+}
+
 describe('adapter error and branch paths', () => {
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -58,6 +65,17 @@ describe('adapter error and branch paths', () => {
     expect(md).toMatch(/Agent only/);
   });
 
+  it('generateVsCodeCopilot includes lifecycle content when present', async () => {
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'fare-copilot-life-'));
+    await fs.mkdir(path.join(tmp, '.ai', 'lifecycle'), { recursive: true });
+    await fs.writeFile(path.join(tmp, '.ai', 'AGENT.md'), '# Agent');
+    await fs.writeFile(path.join(tmp, '.ai', 'lifecycle', 'think.md'), '# Think life');
+    const writer = new FileWriter(tmp);
+    await generateVsCodeCopilot(tmp, writer);
+    const md = await fs.readFile(path.join(tmp, '.github', 'copilot-instructions.md'), 'utf-8');
+    expect(md).toMatch(/Think life/);
+  });
+
   it('generateWindsurf succeeds with AGENT only', async () => {
     const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'fare-wind-agent-'));
     await fs.mkdir(path.join(tmp, '.ai'), { recursive: true });
@@ -97,6 +115,19 @@ describe('adapter error and branch paths', () => {
     );
   });
 
+  it('generateCursor writes lifecycle rule when lifecycle content exists', async () => {
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'fare-cur-life-'));
+    await fs.mkdir(path.join(tmp, '.ai', 'rules'), { recursive: true });
+    await fs.mkdir(path.join(tmp, '.ai', 'lifecycle'), { recursive: true });
+    await fs.writeFile(path.join(tmp, '.ai', 'AGENT.md'), '# A');
+    await fs.writeFile(path.join(tmp, '.ai', 'rules', 'x.md'), '# R');
+    await fs.writeFile(path.join(tmp, '.ai', 'lifecycle', 'plan.md'), '# Plan life');
+    const writer = new FileWriter(tmp);
+    await generateCursor(tmp, writer);
+    const lifecycle = await fs.readFile(path.join(tmp, '.cursor/rules/lifecycle.mdc'), 'utf-8');
+    expect(lifecycle).toMatch(/Plan life/);
+  });
+
   it('generateCursor assigns globs for all specialized rule basenames', async () => {
     const tmp = await fs.mkdtemp(path.join(os.tmpdir(), 'fare-cur-allglobs-'));
     await fs.mkdir(path.join(tmp, '.ai', 'rules'), { recursive: true });
@@ -113,12 +144,21 @@ describe('adapter error and branch paths', () => {
     const writer = new FileWriter(tmp);
     await generateCursor(tmp, writer);
     const sm = await fs.readFile(path.join(tmp, '.cursor/rules/state-management.mdc'), 'utf-8');
+    expectCursorGlobs(sm, ['src/store/**/*', 'src/stores/**/*', '**/*.store.ts', '**/*.slice.ts']);
     expect(sm).toMatch(/src\/store/);
     const df = await fs.readFile(path.join(tmp, '.cursor/rules/data-fetching.mdc'), 'utf-8');
+    expectCursorGlobs(df, [
+      'src/api/**/*',
+      'src/hooks/use*.ts',
+      'src/composables/**/*',
+      'src/services/**/*',
+    ]);
     expect(df).toMatch(/composables/);
     const fv = await fs.readFile(path.join(tmp, '.cursor/rules/forms-validation.mdc'), 'utf-8');
+    expectCursorGlobs(fv, ['**/*.schema.ts', 'src/forms/**/*', '**/*.form.tsx']);
     expect(fv).toMatch(/\.schema\.ts/);
     const rt = await fs.readFile(path.join(tmp, '.cursor/rules/routing.mdc'), 'utf-8');
+    expectCursorGlobs(rt, ['src/routes/**/*', 'src/pages/**/*', 'app/routes/**/*', 'src/app/**/*']);
     expect(rt).toMatch(/src\/routes/);
   });
 
@@ -131,8 +171,16 @@ describe('adapter error and branch paths', () => {
     const writer = new FileWriter(tmp);
     await generateCursor(tmp, writer);
     const styling = await fs.readFile(path.join(tmp, '.cursor/rules/styling.mdc'), 'utf-8');
+    expectCursorGlobs(styling, [
+      '**/*.css',
+      '**/*.scss',
+      '**/*.module.css',
+      '**/*.styled.ts',
+      'tailwind.config.*',
+    ]);
     expect(styling).toMatch(/tailwind\.config/);
     const seo = await fs.readFile(path.join(tmp, '.cursor/rules/seo-meta.mdc'), 'utf-8');
+    expectCursorGlobs(seo, ['src/pages/**/*', 'app/**/*.tsx', '**/*.head.tsx', 'next-seo.config.*']);
     expect(seo).toMatch(/next-seo/);
   });
 

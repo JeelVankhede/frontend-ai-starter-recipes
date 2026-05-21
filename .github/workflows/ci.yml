@@ -34,3 +34,4 @@ jobs:
           npx fare --help
           npx fare --preset react-vite-tailwind --output ./out
           test -f out/.ai/AGENT.md
+          test -f out/.ai/lifecycle/think.md

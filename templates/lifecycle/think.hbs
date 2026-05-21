@@ -1,0 +1,44 @@
+---
+description: Understand the frontend goal, constraints, and existing code before planning
+---
+
+# Think
+
+## Stage Goal
+
+Understand the user goal, selected frontend stack, constraints, and existing code before proposing changes.
+
+## Inputs Needed
+
+- User request and acceptance criteria.
+- Project stack: {{uiFramework}}{{#if hasMetaFramework}} + {{metaFramework}}{{/if}}, {{language}}, {{styling}}.
+- Existing routes/pages in `{{pagesDir}}`.
+- Existing components in `{{componentDir}}`.
+- State, data fetching, forms, tests, styling, and accessibility conventions.
+
+## AI Behavior Expected
+
+- Restate the goal in concrete frontend terms.
+- Inspect relevant files before asking questions the repo can answer.
+- Identify affected routes, components, state/data boundaries, forms, and tests.
+- Surface initial risks around accessibility, responsive behavior, performance, and adapter output.
+- Ask only for decisions that cannot be discovered safely from the repo.
+
+## AI Behavior Forbidden
+
+- Jumping straight to implementation.
+- Replacing established component, styling, routing, or state patterns without evidence.
+- Expanding scope beyond the requested user flow.
+- Treating generic advice as sufficient when stack-specific guidance exists in `.ai/rules/`.
+
+## Output Expected
+
+- Restated goal.
+- Known constraints.
+- Missing context.
+- Initial risk areas.
+- Recommended next step.
+
+## Quality Bar
+
+Think is complete when the AI can name the likely frontend files, conventions, risks, and unresolved decisions before planning.

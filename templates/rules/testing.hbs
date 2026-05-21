@@ -4,6 +4,8 @@ description: Unit, component, and E2E testing standards
 
 # Testing
 
+Use this rule with `.ai/lifecycle/plan.md`, `.ai/lifecycle/test.md`, and `.ai/lifecycle/ship.md`.
+
 {{> testCommands}}
 
 ## Unit & component
@@ -35,3 +37,21 @@ description: Unit, component, and E2E testing standards
 ## Coverage
 
 - Cover critical user paths and edge cases; do not chase 100% line coverage blindly.
+
+## Lifecycle Expectations
+
+- Plan tests before implementation for non-trivial changes.
+- Run targeted checks first, then broaden when shared components, routing, or data behavior changes.
+- Include manual QA when automation does not cover accessibility, responsive layout, visual states, or adapter output.
+
+## Must Avoid
+
+- Tests that assert implementation details instead of user-visible behavior.
+- Skipping error, empty, loading, disabled, and keyboard paths for interactive flows.
+- Claiming adapter or generated-output checks passed without inspecting generated files.
+
+## Acceptance Criteria
+
+- Tests match the risk of the changed user flow.
+- Skipped or missing checks are called out.
+- Build, unit/component, E2E/manual, and accessibility checks are recorded when relevant.

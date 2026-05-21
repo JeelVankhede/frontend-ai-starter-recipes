@@ -4,6 +4,8 @@ description: Styling conventions, tokens, and responsive UI
 
 # Styling
 
+Use this rule with `.ai/lifecycle/plan.md`, `.ai/lifecycle/build.md`, and `.ai/lifecycle/review.md`.
+
 {{> stylingPatterns}}
 
 ## Responsive design
@@ -23,3 +25,21 @@ description: Styling conventions, tokens, and responsive UI
 ## Motion
 
 - Respect `prefers-reduced-motion` for non-essential animations.
+
+## Scope Control
+
+- Match the selected styling system and existing token names before adding new tokens.
+- Keep responsive rules close to the component or shared token system used by the repo.
+- Name viewport, overflow, and content-length constraints in the plan for layout-sensitive work.
+
+## Must Avoid
+
+- One-off colors, spacing, radii, or z-index values when tokens exist.
+- Styling rewrites unrelated to the requested user flow.
+- Hidden text overflow or focus indicators removed without replacement.
+
+## Acceptance Criteria
+
+- Styling follows the selected approach: `{{styling}}`.
+- Responsive and dark-mode behavior are checked when affected.
+- Accessibility contrast and focus states are preserved.

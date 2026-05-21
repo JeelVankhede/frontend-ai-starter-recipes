@@ -35,6 +35,11 @@ try {
     console.error('Expected out/.ai/AGENT.md not found after preset run');
     process.exit(1);
   }
+  const lifecyclePath = path.join(tmpDir, 'out', '.ai', 'lifecycle', 'think.md');
+  if (!existsSync(lifecyclePath)) {
+    console.error('Expected out/.ai/lifecycle/think.md not found after preset run');
+    process.exit(1);
+  }
   console.log('test:pack passed.');
 } finally {
   rmSync(tmpDir, { recursive: true, force: true });

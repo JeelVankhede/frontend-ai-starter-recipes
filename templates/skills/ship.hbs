@@ -6,6 +6,15 @@ description: Ship checklist — git hygiene and PR
 
 1. `git status` — ensure no stray files or secrets.
 2. `git diff` — self-review; split commits if mixed concerns.
-3. Conventional commit message describing user-visible outcome.
-4. Push branch; open PR with **screenshots** for UI changes.
-5. Link issue/ticket; list test steps for reviewers.
+3. Check `.ai/lifecycle/ship.md` for summary, validation, release notes, and rollback expectations.
+4. Conventional commit message describing user-visible outcome.
+5. Push branch; open PR with **screenshots** for UI changes.
+6. Link issue/ticket; list test steps for reviewers.
+7. If generated instructions changed, include adapter review notes and output paths.
+
+## PR Notes
+
+- Summary of behavior delivered.
+- Validation commands and results.
+- Rollout or rollback notes where relevant.
+- Known limitations or follow-up tasks.
