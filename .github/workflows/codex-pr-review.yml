@@ -1,6 +1,12 @@
 name: Codex PR Review
 
 on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'Pull request number to review'
+        required: true
+        type: number
   pull_request_target:
     types:
       - opened
@@ -16,7 +22,7 @@ permissions:
 jobs:
   request-codex-review:
     name: Request Codex review
-    if: ${{ !github.event.pull_request.draft }}
+    if: ${{ github.event_name == 'workflow_dispatch' || !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     steps:
       - name: Verify Codex review token is configured
@@ -40,12 +46,41 @@ jobs:
           # - Pull requests: read/write
           github-token: ${{ secrets.CODEX_REVIEW_TOKEN }}
           script: |
-            const pr = context.payload.pull_request;
             const { owner, repo } = context.repo;
+            let pr;
+
+            if (context.eventName === 'workflow_dispatch') {
+              const prNumber = Number(core.getInput('pr_number'));
+              if (!Number.isInteger(prNumber) || prNumber <= 0) {
+                core.setFailed(`Invalid pr_number input: ${core.getInput('pr_number')}`);
+                return;
+              }
+
+              const response = await github.rest.pulls.get({
+                owner,
+                repo,
+                pull_number: prNumber,
+              });
+              pr = response.data;
+            } else {
+              pr = context.payload.pull_request;
+            }
+
+            if (!pr) {
+              core.setFailed('No pull request context found.');
+              return;
+            }
+
+            if (pr.draft) {
+              core.info(`Skipping draft PR #${pr.number}`);
+              return;
+            }
+
             const marker = `<!-- codex-auto-review:${pr.head.sha} -->`;
 
             const { data: authenticatedUser } = await github.rest.users.getAuthenticated();
             core.info(`Authenticated as ${authenticatedUser.login}`);
+            core.info(`Requesting Codex review for PR #${pr.number} at ${pr.head.sha}`);
 
             const { data: comments } = await github.rest.issues.listComments({
               owner,
