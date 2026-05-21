@@ -1,6 +1,6 @@
 {
   "name": "frontend-ai-starter-recipes",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Interactive CLI for generating AI agent instructions and workflows for frontend web projects",
   "type": "module",
   "main": "dist/cli.js",
