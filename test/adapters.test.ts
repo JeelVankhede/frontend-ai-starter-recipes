@@ -17,6 +17,13 @@ async function seedMinimalAi(targetDir: string) {
   await fs.cp(fixtureAi, path.join(targetDir, '.ai'), { recursive: true });
 }
 
+function expectCursorGlobs(content: string, patterns: string[]) {
+  expect(content).toContain(
+    ['globs:', ...patterns.map((pattern) => `  - ${JSON.stringify(pattern)}`)].join('\n'),
+  );
+  expect(content).not.toContain('globs: "');
+}
+
 describe('IDE adapters', () => {
   let tmp: string;
 
@@ -36,7 +43,7 @@ describe('IDE adapters', () => {
       'utf-8',
     );
     expect(cp).toMatch(/globs:/);
-    expect(cp).toContain('globs: "**/*.tsx,**/*.vue,**/*.svelte,src/components/**/*"');
+    expectCursorGlobs(cp, ['**/*.tsx', '**/*.vue', '**/*.svelte', 'src/components/**/*']);
     expect(cp.match(/^---$/gm) ?? []).toHaveLength(2);
     expect(cp).toMatch(/\.tsx/);
     const testing = await fs.readFile(path.join(tmp, '.cursor/rules/testing.mdc'), 'utf-8');

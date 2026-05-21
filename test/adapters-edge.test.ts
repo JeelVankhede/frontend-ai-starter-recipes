@@ -10,6 +10,13 @@ import { generateVsCodeCopilot } from '../src/adapters/vscode-copilot.js';
 import { generateWindsurf } from '../src/adapters/windsurf.js';
 import { generateAntigravity } from '../src/adapters/antigravity.js';
 
+function expectCursorGlobs(content: string, patterns: string[]) {
+  expect(content).toContain(
+    ['globs:', ...patterns.map((pattern) => `  - ${JSON.stringify(pattern)}`)].join('\n'),
+  );
+  expect(content).not.toContain('globs: "');
+}
+
 describe('adapter error and branch paths', () => {
   beforeEach(() => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -137,16 +144,21 @@ describe('adapter error and branch paths', () => {
     const writer = new FileWriter(tmp);
     await generateCursor(tmp, writer);
     const sm = await fs.readFile(path.join(tmp, '.cursor/rules/state-management.mdc'), 'utf-8');
-    expect(sm).toContain('globs: "src/store/**/*,src/stores/**/*,**/*.store.ts,**/*.slice.ts"');
+    expectCursorGlobs(sm, ['src/store/**/*', 'src/stores/**/*', '**/*.store.ts', '**/*.slice.ts']);
     expect(sm).toMatch(/src\/store/);
     const df = await fs.readFile(path.join(tmp, '.cursor/rules/data-fetching.mdc'), 'utf-8');
-    expect(df).toContain('globs: "src/api/**/*,src/hooks/use*.ts,src/composables/**/*,src/services/**/*"');
+    expectCursorGlobs(df, [
+      'src/api/**/*',
+      'src/hooks/use*.ts',
+      'src/composables/**/*',
+      'src/services/**/*',
+    ]);
     expect(df).toMatch(/composables/);
     const fv = await fs.readFile(path.join(tmp, '.cursor/rules/forms-validation.mdc'), 'utf-8');
-    expect(fv).toContain('globs: "**/*.schema.ts,src/forms/**/*,**/*.form.tsx"');
+    expectCursorGlobs(fv, ['**/*.schema.ts', 'src/forms/**/*', '**/*.form.tsx']);
     expect(fv).toMatch(/\.schema\.ts/);
     const rt = await fs.readFile(path.join(tmp, '.cursor/rules/routing.mdc'), 'utf-8');
-    expect(rt).toContain('globs: "src/routes/**/*,src/pages/**/*,app/routes/**/*,src/app/**/*"');
+    expectCursorGlobs(rt, ['src/routes/**/*', 'src/pages/**/*', 'app/routes/**/*', 'src/app/**/*']);
     expect(rt).toMatch(/src\/routes/);
   });
 
@@ -159,10 +171,16 @@ describe('adapter error and branch paths', () => {
     const writer = new FileWriter(tmp);
     await generateCursor(tmp, writer);
     const styling = await fs.readFile(path.join(tmp, '.cursor/rules/styling.mdc'), 'utf-8');
-    expect(styling).toContain('globs: "**/*.css,**/*.scss,**/*.module.css,**/*.styled.ts,tailwind.config.*"');
+    expectCursorGlobs(styling, [
+      '**/*.css',
+      '**/*.scss',
+      '**/*.module.css',
+      '**/*.styled.ts',
+      'tailwind.config.*',
+    ]);
     expect(styling).toMatch(/tailwind\.config/);
     const seo = await fs.readFile(path.join(tmp, '.cursor/rules/seo-meta.mdc'), 'utf-8');
-    expect(seo).toContain('globs: "src/pages/**/*,app/**/*.tsx,**/*.head.tsx,next-seo.config.*"');
+    expectCursorGlobs(seo, ['src/pages/**/*', 'app/**/*.tsx', '**/*.head.tsx', 'next-seo.config.*']);
     expect(seo).toMatch(/next-seo/);
   });
 

@@ -108,8 +108,5 @@ ${content.replace(/^---\n[\s\S]*?\n---\n+/, '')}`;
 }
 
 function formatGlobs(patterns: string[]) {
-  const escapedPatterns = patterns.map((pattern) =>
-    pattern.replace(/\\/g, '\\\\').replace(/"/g, '\\"'),
-  );
-  return `globs: "${escapedPatterns.join(',')}"`;
+  return ['globs:', ...patterns.map((pattern) => `  - ${JSON.stringify(pattern)}`)].join('\n');
 }
