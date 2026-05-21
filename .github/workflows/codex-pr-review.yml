@@ -19,17 +19,33 @@ jobs:
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     steps:
+      - name: Verify Codex review token is configured
+        shell: bash
+        env:
+          HAS_CODEX_REVIEW_TOKEN: ${{ secrets.CODEX_REVIEW_TOKEN != '' }}
+        run: |
+          if [ "$HAS_CODEX_REVIEW_TOKEN" != "true" ]; then
+            echo "CODEX_REVIEW_TOKEN repository secret is not configured or is empty." >&2
+            echo "Create it under Settings > Secrets and variables > Actions." >&2
+            exit 1
+          fi
+
       - name: Ask Codex to review this PR
         uses: actions/github-script@v7
         with:
-          # Prefer CODEX_REVIEW_TOKEN because some repositories restrict the
-          # default GITHUB_TOKEN to read-only access, which prevents PR comments.
-          # Required secret permissions: repository issues/write and pull requests/read.
-          github-token: ${{ secrets.CODEX_REVIEW_TOKEN || github.token }}
+          # Required PAT permissions for selected repositories:
+          # - Metadata: read
+          # - Contents: read
+          # - Issues: read/write
+          # - Pull requests: read/write
+          github-token: ${{ secrets.CODEX_REVIEW_TOKEN }}
           script: |
             const pr = context.payload.pull_request;
             const { owner, repo } = context.repo;
             const marker = `<!-- codex-auto-review:${pr.head.sha} -->`;
+
+            const { data: authenticatedUser } = await github.rest.users.getAuthenticated();
+            core.info(`Authenticated as ${authenticatedUser.login}`);
 
             const { data: comments } = await github.rest.issues.listComments({
               owner,
