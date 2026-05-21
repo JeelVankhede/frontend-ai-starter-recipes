@@ -8,11 +8,7 @@ on:
         required: true
         type: number
   pull_request_target:
-    types:
-      - opened
-      - reopened
-      - ready_for_review
-      - synchronize
+    types: [opened, reopened, ready_for_review, synchronize]
 
 permissions:
   contents: read
@@ -25,78 +21,53 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     steps:
-      - name: Verify Codex review token is configured
+      - name: Verify secret
         shell: bash
         env:
-          HAS_CODEX_REVIEW_TOKEN: ${{ secrets.CODEX_REVIEW_TOKEN != '' }}
+          HAS_SECRET: ${{ secrets.CODEX_REVIEW_TOKEN != '' }}
         run: |
-          if [ "$HAS_CODEX_REVIEW_TOKEN" != "true" ]; then
-            echo "CODEX_REVIEW_TOKEN repository secret is not configured or is empty." >&2
-            echo "Create it under Settings > Secrets and variables > Actions." >&2
+          if [ "$HAS_SECRET" != "true" ]; then
+            echo "CODEX_REVIEW_TOKEN is not configured or is empty." >&2
             exit 1
           fi
 
-      - name: Ask Codex to review this PR
+      - name: Ask reviewer to check this PR
         uses: actions/github-script@v7
         with:
-          # Required PAT permissions for selected repositories:
-          # - Metadata: read
-          # - Contents: read
-          # - Issues: read/write
-          # - Pull requests: read/write
           github-token: ${{ secrets.CODEX_REVIEW_TOKEN }}
           script: |
             const { owner, repo } = context.repo;
-            let pr;
-
+            let pr = context.payload.pull_request;
             if (context.eventName === 'workflow_dispatch') {
-              const prNumber = Number(core.getInput('pr_number'));
-              if (!Number.isInteger(prNumber) || prNumber <= 0) {
-                core.setFailed(`Invalid pr_number input: ${core.getInput('pr_number')}`);
+              const raw = context.payload.inputs?.pr_number;
+              const pull_number = Number(raw);
+              if (!Number.isInteger(pull_number) || pull_number <= 0) {
+                core.setFailed(`Invalid pr_number input: ${raw ?? ''}`);
                 return;
               }
-
-              const response = await github.rest.pulls.get({
-                owner,
-                repo,
-                pull_number: prNumber,
-              });
-              pr = response.data;
-            } else {
-              pr = context.payload.pull_request;
+              pr = (await github.rest.pulls.get({ owner, repo, pull_number })).data;
             }
-
             if (!pr) {
-              core.setFailed('No pull request context found.');
+              core.setFailed('No pull request found.');
               return;
             }
-
             if (pr.draft) {
               core.info(`Skipping draft PR #${pr.number}`);
               return;
             }
-
             const marker = `<!-- codex-auto-review:${pr.head.sha} -->`;
-
-            const { data: authenticatedUser } = await github.rest.users.getAuthenticated();
-            core.info(`Authenticated as ${authenticatedUser.login}`);
-            core.info(`Requesting Codex review for PR #${pr.number} at ${pr.head.sha}`);
-
-            const { data: comments } = await github.rest.issues.listComments({
-              owner,
-              repo,
-              issue_number: pr.number,
-              per_page: 100,
-            });
-
+            const user = (await github.rest.users.getAuthenticated()).data;
+            core.info(`Authenticated as ${user.login}`);
+            core.info(`Requesting review for PR #${pr.number} at ${pr.head.sha}`);
+            const comments = (await github.rest.issues.listComments({ owner, repo, issue_number: pr.number, per_page: 100 })).data;
             if (comments.some((comment) => comment.body?.includes(marker))) {
-              core.info(`Codex review already requested for ${pr.head.sha}`);
+              core.info(`Review already requested for ${pr.head.sha}`);
               return;
             }
-
+            const mention = '@' + 'codex review';
             await github.rest.issues.createComment({
               owner,
               repo,
               issue_number: pr.number,
-              body: `${marker}\n@codex review\n\nPlease review this PR for correctness, regressions, missing tests, security issues, and maintainability. Focus only on actionable findings.`,
+              body: `${marker}\n${mention}\n\nPlease review this PR for correctness, regressions, missing tests, security issues, and maintainability. Focus only on actionable findings.`,
             });
