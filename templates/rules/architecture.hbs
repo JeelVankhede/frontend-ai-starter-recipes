@@ -5,6 +5,10 @@ globs: "**/*"
 
 # Architecture
 
+Use this rule with `.ai/lifecycle/think.md`, `.ai/lifecycle/plan.md`, `.ai/lifecycle/build.md`, and `.ai/lifecycle/review.md`.
+
+Before changing architecture, identify affected routes/pages, layout boundaries, reusable components, state ownership, data-fetching boundaries, and test coverage. Prefer local changes over broad restructuring.
+
 ## Directory layout
 
 {{#if isNextJS}}
@@ -35,6 +39,20 @@ Primary paths in this project (tune to match your repo):
 2. **Application** — hooks/composables/services orchestrating user flows.
 3. **Data** — API clients, query hooks, DTO mappers (keep framework-agnostic where possible).
 
+## Decision Rules
+
+- Route/page files orchestrate page-level composition; reusable components stay focused on UI behavior.
+- Shared abstractions need repeated behavior or a clear ownership boundary, not a single call site.
+- Global state is justified only when state is shared across routes/components, persisted, or required by app-level workflows.
+- Data-loading, empty, error, and permission states should be named in the plan before implementation.
+
+## Must Avoid
+
+- Creating new architecture layers for one-off features.
+- Moving state globally before local ownership is ruled out.
+- Changing route structure without naming user-facing impact.
+- Mixing view, data mapping, and side effects when the codebase already separates them.
+
 ## Barrel exports
 
 - Use `index.ts` sparingly at **feature boundaries**; avoid mega-barrels that harm tree-shaking.
@@ -46,3 +64,9 @@ Primary paths in this project (tune to match your repo):
 ## Commands
 
 {{> buildCommands}}
+
+## Acceptance Criteria
+
+- Affected routes/components are named.
+- State and data ownership are explained.
+- Tests or manual checks cover the primary user flow.

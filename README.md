@@ -61,6 +61,7 @@ npx frontend-ai-starter-recipes --preset angular-material --output ./out
 ## What gets generated?
 
 - `.ai/AGENT.md` — core AI behavior
+- `.ai/lifecycle/` — Think, Plan, Build, Review, Test, Ship, and Reflect workflow contracts
 - `.ai/rules/` — architecture, components, styling, routing, state, data fetching, forms, performance, a11y, SEO, testing, errors, security, env, Git, pre-commit, and related topics
 - `.ai/skills/` — workflows (plan-review, code-review, qa, ship, document-release, retro, performance-audit, accessibility-audit, component-audit, dependency-audit, …)
 - `.ai/context/`, `.ai/tracking/` — reference (e.g. domain map, tech stack) and efficiency tracking

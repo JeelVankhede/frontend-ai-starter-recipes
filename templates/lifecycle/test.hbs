@@ -1,0 +1,44 @@
+---
+description: Run or define frontend validation proportional to risk
+---
+
+# Test
+
+## Stage Goal
+
+Run or define the right validation for the frontend change.
+
+## Inputs Needed
+
+- Changed behavior and affected user flows.
+- Project commands from `.ai/AGENT.md`.
+- Acceptance criteria.
+- Manual QA requirements.
+- Adapter output paths when generated instructions changed.
+
+## AI Behavior Expected
+
+- Run targeted tests first, then broaden when shared behavior changed.
+- Use component/unit tests for logic and rendering branches.
+- Use E2E smoke checks for critical navigation, forms, auth, and data flows.
+- Include accessibility checks for changed interactive UI.
+- Define manual checks when automation is missing.
+- State untested areas plainly.
+
+## AI Behavior Forbidden
+
+- Claiming tests passed without running them.
+- Hiding skipped checks.
+- Treating screenshots as a substitute for behavior validation.
+- Marking template or adapter changes done without generated-output review.
+
+## Output Expected
+
+- Commands run and results.
+- Manual QA checklist if needed.
+- Untested areas.
+- Release-blocking issues, if any.
+
+## Quality Bar
+
+Test is complete when validation is proportional to risk and gaps are visible to reviewers.

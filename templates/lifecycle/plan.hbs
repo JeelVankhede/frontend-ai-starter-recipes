@@ -1,0 +1,44 @@
+---
+description: Produce a concrete frontend implementation plan before coding
+---
+
+# Plan
+
+## Stage Goal
+
+Produce a scoped frontend implementation plan before editing files.
+
+## Inputs Needed
+
+- Output from Think.
+- Existing routes/pages, components, state/data patterns, styling approach, and tests.
+- Acceptance criteria and out-of-scope items.
+- Compatibility, accessibility, performance, and release constraints.
+
+## AI Behavior Expected
+
+- Name affected routes, components, hooks/composables/services, styles, and tests.
+- Define state ownership and server-state/data-fetching boundaries.
+- Identify accessibility, responsive, loading, error, empty, and performance concerns.
+- Choose the smallest implementation path that matches existing conventions.
+- Define validation commands and manual checks.
+
+## AI Behavior Forbidden
+
+- Planning vague work like "clean up UI" or "make it scalable".
+- Introducing new libraries without explicit approval.
+- Moving state globally before it is shared, persisted, or required by the workflow.
+- Hiding unresolved user-facing behavior decisions.
+
+## Output Expected
+
+- Proposed approach.
+- File impact map.
+- Scope boundaries.
+- Risks and tradeoffs.
+- Test strategy.
+- Open questions, if any.
+
+## Quality Bar
+
+Plan is complete when another engineer could implement the frontend change without making major product or architecture decisions.

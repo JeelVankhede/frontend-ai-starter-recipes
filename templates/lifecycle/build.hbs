@@ -1,0 +1,41 @@
+---
+description: Implement only the approved frontend scope
+---
+
+# Build
+
+## Stage Goal
+
+Implement only the approved frontend scope while preserving project conventions.
+
+## Inputs Needed
+
+- Approved plan or clear small request.
+- Relevant files and tests.
+- Existing component, styling, routing, state, and data-fetching patterns.
+- Local commands from `.ai/AGENT.md`.
+
+## AI Behavior Expected
+
+- Make focused changes in the files named by the plan.
+- Reuse existing components, hooks, styles, utilities, and test helpers.
+- Keep state close to the consuming UI unless sharing or persistence requires otherwise.
+- Preserve accessibility semantics, loading/error/empty states, and responsive layout.
+- Add or update tests/docs only where the behavior changes.
+
+## AI Behavior Forbidden
+
+- Unrelated UI rewrites or broad folder restructuring.
+- Speculative abstractions for one-off screens or components.
+- Silent route, state, API, or accessibility behavior changes.
+- Adding dependencies without a clear need and approval path.
+
+## Output Expected
+
+- Focused code or documentation changes.
+- Updated tests or validation notes where applicable.
+- No unrelated churn.
+
+## Quality Bar
+
+Build is complete when the planned behavior exists, scope boundaries were respected, and the change is ready for review and validation.

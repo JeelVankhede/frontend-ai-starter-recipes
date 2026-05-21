@@ -6,6 +6,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import chalk from 'chalk';
 import type { FileWriter } from '../writer.js';
+import { readLifecycleContent } from './lifecycle.js';
 
 /**
  * Reads generated `.ai` files and writes Cursor-specific rule files with frontmatter.
@@ -27,27 +28,50 @@ export async function generateCursor(outputDir: string, writer: FileWriter) {
 
       let ruleLine = 'alwaysApply: true';
       if (basename === 'component-patterns') {
-        ruleLine = 'globs: **/*.tsx,**/*.vue,**/*.svelte,src/components/**/*';
+        ruleLine = formatGlobs(['**/*.tsx', '**/*.vue', '**/*.svelte', 'src/components/**/*']);
       } else if (basename === 'styling') {
-        ruleLine =
-          'globs: **/*.css,**/*.scss,**/*.module.css,**/*.styled.ts,tailwind.config.*';
+        ruleLine = formatGlobs([
+          '**/*.css',
+          '**/*.scss',
+          '**/*.module.css',
+          '**/*.styled.ts',
+          'tailwind.config.*',
+        ]);
       } else if (basename === 'state-management') {
-        ruleLine = 'globs: src/store/**/*,src/stores/**/*,**/*.store.ts,**/*.slice.ts';
+        ruleLine = formatGlobs(['src/store/**/*', 'src/stores/**/*', '**/*.store.ts', '**/*.slice.ts']);
       } else if (basename === 'data-fetching') {
-        ruleLine =
-          'globs: src/api/**/*,src/hooks/use*.ts,src/composables/**/*,src/services/**/*';
+        ruleLine = formatGlobs([
+          'src/api/**/*',
+          'src/hooks/use*.ts',
+          'src/composables/**/*',
+          'src/services/**/*',
+        ]);
       } else if (basename === 'testing') {
-        ruleLine =
-          'globs: **/*.test.ts,**/*.test.tsx,**/*.spec.ts,**/*.spec.tsx,cypress/**/*,e2e/**/*';
+        ruleLine = formatGlobs([
+          '**/*.test.ts',
+          '**/*.test.tsx',
+          '**/*.spec.ts',
+          '**/*.spec.tsx',
+          'cypress/**/*',
+          'e2e/**/*',
+        ]);
       } else if (basename === 'forms-validation') {
-        ruleLine = 'globs: **/*.schema.ts,src/forms/**/*,**/*.form.tsx';
+        ruleLine = formatGlobs(['**/*.schema.ts', 'src/forms/**/*', '**/*.form.tsx']);
       } else if (basename === 'routing') {
-        ruleLine = 'globs: src/routes/**/*,src/pages/**/*,app/routes/**/*,src/app/**/*';
+        ruleLine = formatGlobs(['src/routes/**/*', 'src/pages/**/*', 'app/routes/**/*', 'src/app/**/*']);
       } else if (basename === 'seo-meta') {
-        ruleLine = 'globs: src/pages/**/*,app/**/*.tsx,**/*.head.tsx,next-seo.config.*';
+        ruleLine = formatGlobs(['src/pages/**/*', 'app/**/*.tsx', '**/*.head.tsx', 'next-seo.config.*']);
       }
 
       await writer.write(`.cursor/rules/${basename}.mdc`, addFrontmatter(content, ruleLine, basename));
+    }
+
+    const lifecycleContent = await readLifecycleContent(aiDir);
+    if (lifecycleContent.trim()) {
+      await writer.write(
+        '.cursor/rules/lifecycle.mdc',
+        addFrontmatter(lifecycleContent, 'alwaysApply: true', 'Lifecycle workflow'),
+      );
     }
 
     const skillsDir = path.join(aiDir, 'skills');
@@ -81,4 +105,11 @@ ${rule}
 ---
 
 ${content.replace(/^---\n[\s\S]*?\n---\n+/, '')}`;
+}
+
+function formatGlobs(patterns: string[]) {
+  const escapedPatterns = patterns.map((pattern) =>
+    pattern.replace(/\\/g, '\\\\').replace(/"/g, '\\"'),
+  );
+  return `globs: "${escapedPatterns.join(',')}"`;
 }

@@ -4,6 +4,10 @@ description: API clients, caching, and async UI states
 
 # Data Fetching
 
+Use this rule with `.ai/lifecycle/think.md`, `.ai/lifecycle/plan.md`, `.ai/lifecycle/build.md`, and `.ai/lifecycle/test.md`.
+
+Before changing data access, identify the owning API client, cache strategy, loading/error/empty states, and mutation invalidation behavior.
+
 {{#if (eq dataFetching "none")}}
 - Centralize HTTP in `src/api/` (or `src/services/`); use typed responses and narrow error shapes.
 - Surface **loading / error / empty** states consistently in UI components.
@@ -33,3 +37,22 @@ description: API clients, caching, and async UI states
 ## Auth headers
 
 - Attach tokens in **one** place (interceptor / link / fetch wrapper), not per call site.
+
+## UI State Contract
+
+- Every async view needs loading, error, empty, and success states.
+- Mutations should define optimistic behavior, disabled states, retries, and post-success cache updates where relevant.
+- Avoid leaking transport errors directly to users; map them to useful UI copy.
+
+## Must Avoid
+
+- Fetching from leaf components when the repo already uses hooks/composables/services.
+- Duplicating server-state cache into global client state.
+- Inconsistent query keys or mutation invalidation.
+- Per-call auth header handling.
+
+## Acceptance Criteria
+
+- Data owner, cache key/invalidation, and UI states are named.
+- Error and empty paths are tested or manually checked.
+- Auth/session behavior is preserved.

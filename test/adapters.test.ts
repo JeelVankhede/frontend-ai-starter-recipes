@@ -36,9 +36,14 @@ describe('IDE adapters', () => {
       'utf-8',
     );
     expect(cp).toMatch(/globs:/);
+    expect(cp).toContain('globs: "**/*.tsx,**/*.vue,**/*.svelte,src/components/**/*"');
+    expect(cp.match(/^---$/gm) ?? []).toHaveLength(2);
     expect(cp).toMatch(/\.tsx/);
     const testing = await fs.readFile(path.join(tmp, '.cursor/rules/testing.mdc'), 'utf-8');
     expect(testing).toMatch(/\.test\.ts/);
+    const lifecycle = await fs.readFile(path.join(tmp, '.cursor/rules/lifecycle.mdc'), 'utf-8');
+    expect(lifecycle).toMatch(/Lifecycle fixture think/);
+    expect(lifecycle).toMatch(/Lifecycle fixture reflect/);
   });
 
   it('generateClaudeCode writes CLAUDE.md', async () => {
@@ -46,6 +51,7 @@ describe('IDE adapters', () => {
     await generateClaudeCode(tmp, writer);
     const claude = await fs.readFile(path.join(tmp, 'CLAUDE.md'), 'utf-8');
     expect(claude).toMatch(/FARE Test Agent/);
+    expect(claude).toMatch(/Lifecycle fixture think/);
     expect(claude).toMatch(/Architecture rule/);
   });
 
@@ -57,6 +63,7 @@ describe('IDE adapters', () => {
       'utf-8',
     );
     expect(copilot).toMatch(/FARE Test Agent/);
+    expect(copilot).toMatch(/Lifecycle fixture plan/);
   });
 
   it('generateWindsurf writes .windsurfrules', async () => {
@@ -64,6 +71,7 @@ describe('IDE adapters', () => {
     await generateWindsurf(tmp, writer);
     const rules = await fs.readFile(path.join(tmp, '.windsurfrules'), 'utf-8');
     expect(rules).toMatch(/FARE Test Agent/);
+    expect(rules).toMatch(/Lifecycle fixture review/);
   });
 
   it('generateAntigravity writes workflow from SKILL.md', async () => {

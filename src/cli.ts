@@ -47,6 +47,8 @@ const RULE_FILES = [
   'pre-commit',
 ] as const;
 
+const LIFECYCLE_FILES = ['think', 'plan', 'build', 'review', 'test', 'ship', 'reflect'] as const;
+
 const program = new Command();
 
 program
@@ -148,6 +150,10 @@ async function run() {
     const writer = new FileWriter(outputDir);
 
     await writer.write('.ai/AGENT.md', await engine.render('agent.hbs', context));
+
+    for (const stage of LIFECYCLE_FILES) {
+      await writer.write(`.ai/lifecycle/${stage}.md`, await engine.render(`lifecycle/${stage}.hbs`, context));
+    }
 
     for (const rule of RULE_FILES) {
       await writer.write(`.ai/rules/${rule}.md`, await engine.render(`rules/${rule}.hbs`, context));

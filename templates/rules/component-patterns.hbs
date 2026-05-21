@@ -4,10 +4,14 @@ description: Component design, composition, and framework idioms
 
 # Component Patterns
 
+Use this rule with `.ai/lifecycle/plan.md`, `.ai/lifecycle/build.md`, and `.ai/lifecycle/review.md`.
+
 ## Composition
 
 - Prefer **small, focused components** over large “god” components.
 - Push conditional rendering and side effects **down** when it improves readability.
+- Reuse existing primitives before creating new ones.
+- Keep route/page orchestration separate from reusable component internals.
 
 {{> componentPatterns}}
 
@@ -36,9 +40,29 @@ description: Component design, composition, and framework idioms
 ## Side effects
 
 - Keep data fetching in **dedicated hooks/composables/effects**, not scattered in leaf components unless trivial.
+- Keep derived UI state close to the component until it is shared or persisted.
+- Model loading, empty, error, disabled, and success states explicitly for interactive components.
 
 ## Performance guardrails
 
 {{#if isReact}}
 - Use `React.memo` / `useCallback` / `useMemo` **only** when profiling shows benefit.
 {{/if}}
+
+## Accessibility Contract
+
+- Interactive components expose accessible names.
+- Keyboard behavior matches the visual affordance.
+- Focus is visible and returns to the right place after modal/popover flows.
+
+## Must Avoid
+
+- New component APIs that hide required labels, roles, or error states.
+- Props that bundle unrelated behavior into one ambiguous object.
+- Styling-only variants that break semantics or keyboard behavior.
+
+## Acceptance Criteria
+
+- Component responsibility is clear.
+- Props/events/slots are explicit.
+- Critical states and accessibility behavior are covered by tests or manual checks.
