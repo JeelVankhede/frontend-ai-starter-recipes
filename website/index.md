@@ -7,8 +7,8 @@ hero:
   tagline: Opinionated rules, skills, and context for React, Vue, Svelte, Angular — npm package frontend-ai-starter-recipes, CLI fare.
   actions:
     - theme: brand
-      text: Start the story
-      link: /guide/1-the-problem
+      text: Try it in 2 minutes
+      link: /guide/4-usage#try-it-in-2-minutes
     - theme: alt
       text: View on GitHub
       link: https://github.com/JeelVankhede/frontend-ai-starter-recipes
@@ -40,5 +40,5 @@ flowchart LR
 3. **Ship UI** with agents that already know your Tailwind vs CSS Modules, Zustand vs Pinia, Playwright vs Cypress, and more.
 
 ::: tip Next step
-Continue with [The problem](/guide/1-the-problem) or jump to [Installation](/guide/3-installation).
+Jump to [Try it in 2 minutes](/guide/4-usage#try-it-in-2-minutes), or continue with [The problem](/guide/1-the-problem).
 :::

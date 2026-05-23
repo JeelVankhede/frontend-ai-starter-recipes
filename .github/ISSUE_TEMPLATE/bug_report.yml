@@ -1,0 +1,74 @@
+name: Bug report
+description: Report a reproducible problem with the frontend CLI or generated output.
+title: "[Bug]: "
+labels: ["bug", "community-feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for testing frontend-ai-starter-recipes. Please include enough detail for someone else to reproduce the issue.
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      description: Output of `npm view frontend-ai-starter-recipes version`, `frontend-ai-starter-recipes --version`, or the version you installed.
+      placeholder: "1.1.0"
+    validations:
+      required: true
+  - type: input
+    id: command
+    attributes:
+      label: Command
+      description: The exact command you ran.
+      placeholder: "npx frontend-ai-starter-recipes --preset react-vite-tailwind --output ./my-app"
+    validations:
+      required: true
+  - type: input
+    id: preset
+    attributes:
+      label: Preset or stack
+      description: Name the preset or custom stack choices.
+      placeholder: "react-vite-tailwind"
+    validations:
+      required: true
+  - type: input
+    id: output-path
+    attributes:
+      label: Generated path
+      description: Where the CLI wrote files.
+      placeholder: "./my-app"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead? Include errors or broken generated files.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: List the smallest steps that reproduce the issue.
+      placeholder: |
+        1. Run ...
+        2. Open ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Node version, package manager, OS, shell, and AI/IDE tool if relevant.
+      placeholder: "Node 20.x, npm 10.x, macOS, Cursor"
+    validations:
+      required: true

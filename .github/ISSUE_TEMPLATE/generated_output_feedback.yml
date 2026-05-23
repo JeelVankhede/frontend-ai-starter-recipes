@@ -1,0 +1,59 @@
+name: Generated output feedback
+description: Tell us where generated `.ai/` output is useful, vague, wrong, or missing.
+title: "[Generated output]: "
+labels: ["generated-output", "community-feedback"]
+body:
+  - type: input
+    id: command
+    attributes:
+      label: Command
+      placeholder: "npx frontend-ai-starter-recipes --preset react-vite-tailwind --output ./my-app"
+    validations:
+      required: true
+  - type: input
+    id: preset
+    attributes:
+      label: Preset or stack
+      placeholder: "react-vite-tailwind"
+    validations:
+      required: true
+  - type: input
+    id: generated-path
+    attributes:
+      label: Generated path
+      placeholder: "./my-app/.ai/rules/component-patterns.md"
+    validations:
+      required: true
+  - type: dropdown
+    id: feedback-category
+    attributes:
+      label: Feedback category
+      options:
+        - Preset accuracy
+        - Rule usefulness
+        - Generated structure
+        - Workflow gap
+        - Docs friction
+    validations:
+      required: true
+  - type: textarea
+    id: useful
+    attributes:
+      label: What felt useful?
+      description: Name the generated file or rule and why it helped.
+    validations:
+      required: false
+  - type: textarea
+    id: wrong-or-missing
+    attributes:
+      label: What felt vague, wrong, too strict, or missing?
+      description: Please include the file path and the exact rule or section when possible.
+    validations:
+      required: true
+  - type: textarea
+    id: suggested-change
+    attributes:
+      label: Suggested change
+      description: What would make the generated output better for your frontend workflow?
+    validations:
+      required: false

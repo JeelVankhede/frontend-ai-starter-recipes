@@ -1,0 +1,60 @@
+name: IDE adapter feedback
+description: Report how Cursor, Claude Code, Copilot, Antigravity, or Windsurf picked up generated context.
+title: "[IDE adapter]: "
+labels: ["ide-adapter", "community-feedback"]
+body:
+  - type: input
+    id: command
+    attributes:
+      label: Command
+      placeholder: "npx frontend-ai-starter-recipes --preset react-vite-tailwind --output ./my-app"
+    validations:
+      required: true
+  - type: input
+    id: preset
+    attributes:
+      label: Preset or stack
+      placeholder: "react-vite-tailwind"
+    validations:
+      required: true
+  - type: dropdown
+    id: adapter
+    attributes:
+      label: IDE or AI tool
+      options:
+        - Cursor
+        - Claude Code
+        - VS Code Copilot
+        - Antigravity
+        - Windsurf
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: adapter-file
+    attributes:
+      label: Adapter file or folder
+      placeholder: ".cursor/rules/index.mdc"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected adapter behavior
+      description: What context should the AI tool have picked up?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual adapter behavior
+      description: What did the AI tool do instead?
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Example prompt or task
+      description: Include a small prompt or workflow that shows the adapter behavior.
+    validations:
+      required: false

@@ -2,6 +2,8 @@
 
 ## Canonical tree (`.ai/`)
 
+The CLI creates repo instructions and adapter files, not a runnable frontend app. Treat the generated `.ai/` tree as a starting operating manual for your project and edit it after reviewing the output.
+
 ```
 .ai/
   AGENT.md

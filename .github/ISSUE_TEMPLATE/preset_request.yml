@@ -1,0 +1,44 @@
+name: Preset request
+description: Request a frontend preset with real stack details.
+title: "[Preset]: "
+labels: ["preset-request", "community-feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Good preset requests explain a real stack and why the generated rules would need to differ from existing presets.
+  - type: input
+    id: stack-name
+    attributes:
+      label: Stack name
+      placeholder: "React Router + Vite + TanStack Start"
+    validations:
+      required: true
+  - type: textarea
+    id: stack-details
+    attributes:
+      label: Stack details
+      description: Framework, meta-framework, styling, state/data libraries, forms, tests, Storybook, CI, and deployment.
+    validations:
+      required: true
+  - type: textarea
+    id: why-existing-presets-miss
+    attributes:
+      label: Why existing presets are not enough
+      description: Compare with the closest existing preset.
+    validations:
+      required: true
+  - type: textarea
+    id: generated-rules
+    attributes:
+      label: Rules this preset should generate
+      description: Name specific rules, lifecycle guidance, or adapter behavior that would matter.
+    validations:
+      required: true
+  - type: textarea
+    id: real-project-context
+    attributes:
+      label: Real project context
+      description: Describe the kind of app where you would use this. Links are optional.
+    validations:
+      required: false
