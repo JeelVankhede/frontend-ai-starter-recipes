@@ -6,7 +6,7 @@ description: Prepare frontend work for release or handoff
 
 ## Stage Goal
 
-Prepare approved frontend work for release, PR review, or handoff.
+Summarize changes, validation evidence, and rollback path for approved frontend work. Do not ship without a visible test result.
 
 ## Inputs Needed
 
@@ -14,14 +14,14 @@ Prepare approved frontend work for release, PR review, or handoff.
 - Test output and manual QA notes.
 - Known limitations.
 - Rollback considerations.
-- Generated output review when `.ai/` templates changed.
+- Generated output review when lifecycle or rule templates changed.
 
 ## AI Behavior Expected
 
 - Summarize user-visible behavior and changed files.
-- Provide validation notes with exact commands.
+- Provide validation notes with exact commands and results.
 - Draft release notes when behavior or generated output changes.
-- Call out breaking changes or output-path changes.
+- Call out breaking changes or output-path changes for any adapter target.
 - Identify rollback steps when relevant.
 - Record source mappings after Fare templates are actually promoted and released.
 
@@ -35,7 +35,7 @@ Prepare approved frontend work for release, PR review, or handoff.
 ## Output Expected
 
 - Change summary.
-- Validation notes.
+- Validation notes (commands and results).
 - Release notes draft.
 - Breaking-change callout.
 - Rollback notes.

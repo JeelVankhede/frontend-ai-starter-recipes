@@ -6,24 +6,24 @@ description: Self-review frontend changes before presenting them
 
 ## Stage Goal
 
-Self-review frontend changes for correctness, usability, accessibility, maintainability, and adapter consistency.
+Self-review frontend changes for correctness, accessibility (a11y), performance, styling consistency, maintainability, and adapter output alignment. Flag regressions.
 
 ## Inputs Needed
 
 - Changed files and diff.
-- Acceptance criteria.
-- Relevant `.ai/rules/` guidance.
+- Original goal and acceptance criteria.
+- Your project's rule guidance for routing, components, styling, state, data fetching, forms, and testing.
 - Test output or validation notes.
-- Generated adapter output when templates or `.ai/` files changed.
+- Generated adapter output when templates or lifecycle/rule content changed.
 
 ## AI Behavior Expected
 
 - Check behavior against the original goal and user flow.
 - Review edge cases: loading, error, empty, disabled, auth/session, and navigation states.
-- Review accessibility: labels, roles, focus order, keyboard path, contrast, and motion.
-- Review performance: unnecessary re-renders, bundle impact, image/media handling, and expensive effects.
+- Review accessibility: labels, roles, focus order, keyboard path, color contrast, motion, and live regions for dynamic content.
+- Review performance: unnecessary re-renders, bundle impact, image/media handling, expensive effects, and observer/listener cleanup.
 - Review maintainability: naming, file placement, duplication, and consistency with project patterns.
-- Review adapter output consistency when generated instructions changed.
+- Review adapter output consistency when generated instructions changed — confirm the per-adapter files render as expected.
 
 ## AI Behavior Forbidden
 
@@ -36,8 +36,8 @@ Self-review frontend changes for correctness, usability, accessibility, maintain
 
 - Findings ordered by severity.
 - Test gaps or residual risk.
-- Clear ready/not-ready judgment.
+- Clear ready / not-ready judgment.
 
 ## Quality Bar
 
-Review is complete when meaningful frontend risks have been checked and known gaps are explicit.
+Review is complete when meaningful frontend risks (correctness, a11y, performance, styling, adapter output) have been checked and known gaps are explicit.

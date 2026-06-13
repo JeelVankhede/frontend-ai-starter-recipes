@@ -1,21 +1,40 @@
 ---
-description: Component design, composition, and framework idioms
+description: Guide component creation and modification in Fare-generated frontend projects.
 ---
 
-# Component Patterns
+# Components
 
-Use this rule with `.ai/lifecycle/plan.md`, `.ai/lifecycle/build.md`, and `.ai/lifecycle/review.md`.
+Guide component creation and modification in Fare-generated frontend projects.
 
-## Composition
+Use this rule during the Build and Review stages.
 
-- Prefer **small, focused components** over large “god” components.
+## AI Responsibilities
+
+- Reuse existing component patterns before creating new ones.
+- Keep component APIs explicit and small.
+- Separate presentation, state, and side effects when the existing stack supports it.
+- Include loading, empty, error, disabled, and focused states when relevant.
+
+## AI Must Avoid
+
+- Building generic component libraries for a single screen.
+- Hiding data fetching inside reusable presentation components unless that is the existing convention.
+- Styling states that are inaccessible by keyboard or screen reader.
+
+## Stack-Specific Guidance
+
+For typed frontend stacks, keep prop types close to component usage and avoid overly broad `any`-style contracts.
+
+### Composition
+
+- Prefer **small, focused components** over large "god" components.
 - Push conditional rendering and side effects **down** when it improves readability.
 - Reuse existing primitives before creating new ones.
 - Keep route/page orchestration separate from reusable component internals.
 
 {{> componentPatterns}}
 
-## Props & API surface
+### Props & API surface
 
 {{#if isReact}}
 - Prefer explicit prop types (TypeScript) and discriminated unions for variant props.
@@ -31,38 +50,33 @@ Use this rule with `.ai/lifecycle/plan.md`, `.ai/lifecycle/build.md`, and `.ai/l
 - Prefer `input()` / `output()` signals for new code when the project has adopted them.
 {{/if}}
 
-## Lists & keys
+### Lists & keys
 
 {{#if isReact}}
 - Stable `key` values for lists; never use array index when order can change.
 {{/if}}
 
-## Side effects
+### Side effects
 
 - Keep data fetching in **dedicated hooks/composables/effects**, not scattered in leaf components unless trivial.
 - Keep derived UI state close to the component until it is shared or persisted.
 - Model loading, empty, error, disabled, and success states explicitly for interactive components.
 
-## Performance guardrails
+### Performance guardrails
 
 {{#if isReact}}
 - Use `React.memo` / `useCallback` / `useMemo` **only** when profiling shows benefit.
 {{/if}}
 
-## Accessibility Contract
+### Accessibility contract
 
 - Interactive components expose accessible names.
 - Keyboard behavior matches the visual affordance.
 - Focus is visible and returns to the right place after modal/popover flows.
 
-## Must Avoid
-
-- New component APIs that hide required labels, roles, or error states.
-- Props that bundle unrelated behavior into one ambiguous object.
-- Styling-only variants that break semantics or keyboard behavior.
-
 ## Acceptance Criteria
 
-- Component responsibility is clear.
-- Props/events/slots are explicit.
-- Critical states and accessibility behavior are covered by tests or manual checks.
+- Component purpose is clear.
+- Props and states are handled deliberately.
+- Accessibility states are accounted for.
+- Tests or manual checks cover important variants.
