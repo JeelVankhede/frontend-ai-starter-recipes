@@ -21,7 +21,6 @@ function base(overrides: Partial<UserAnswers> = {}): UserAnswers {
     monitoring: [],
     cicd: 'github-actions',
     ideTargets: ['cursor'],
-    skills: ['plan-review'],
     ...overrides,
   };
 }

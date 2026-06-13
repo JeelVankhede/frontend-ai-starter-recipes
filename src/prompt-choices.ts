@@ -206,15 +206,3 @@ export const monitoringChoices = [
   { name: 'PostHog', value: 'posthog' },
 ] as const;
 
-export const ALL_SKILL_IDS = [
-  'plan-review',
-  'code-review',
-  'qa',
-  'ship',
-  'document-release',
-  'retro',
-  'performance-audit',
-  'accessibility-audit',
-  'component-audit',
-  'dependency-audit',
-] as const;

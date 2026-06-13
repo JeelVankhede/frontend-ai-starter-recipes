@@ -49,7 +49,6 @@ export interface UserAnswers {
   monitoring: string[];
   cicd: 'github-actions' | 'gitlab-ci' | 'vercel' | 'netlify' | 'none';
   ideTargets: string[];
-  skills: string[];
 }
 
 /** {@link UserAnswers} plus derived strings and booleans for templates. */

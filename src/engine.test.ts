@@ -29,7 +29,6 @@ function minimalContext() {
     monitoring: [],
     cicd: 'github-actions',
     ideTargets: [],
-    skills: [],
   };
   return buildContext(answers);
 }
