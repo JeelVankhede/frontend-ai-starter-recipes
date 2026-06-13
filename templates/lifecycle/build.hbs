@@ -6,18 +6,18 @@ description: Implement only the approved frontend scope
 
 ## Stage Goal
 
-Implement only the approved frontend scope while preserving project conventions.
+Implement only the approved plan scope while preserving project conventions. Do not widen scope during Build.
 
 ## Inputs Needed
 
 - Approved plan or clear small request.
-- Relevant files and tests.
-- Existing component, styling, routing, state, and data-fetching patterns.
-- Local commands from `.ai/AGENT.md`.
+- Relevant files, components, hooks, and tests.
+- Existing component, styling, routing, state, and data-fetching patterns already in the repo.
+- Local project commands sourced from your project's AGENT documentation.
 
 ## AI Behavior Expected
 
-- Make focused changes in the files named by the plan.
+- Make focused changes only in the files named by the plan.
 - Reuse existing components, hooks, styles, utilities, and test helpers.
 - Keep state close to the consuming UI unless sharing or persistence requires otherwise.
 - Preserve accessibility semantics, loading/error/empty states, and responsive layout.
@@ -28,12 +28,13 @@ Implement only the approved frontend scope while preserving project conventions.
 - Unrelated UI rewrites or broad folder restructuring.
 - Speculative abstractions for one-off screens or components.
 - Silent route, state, API, or accessibility behavior changes.
-- Adding dependencies without a clear need and approval path.
+- Adding dependencies without a clear need and an approval path.
+- Expanding scope beyond the approved plan.
 
 ## Output Expected
 
-- Focused code or documentation changes.
-- Updated tests or validation notes where applicable.
+- Focused code or documentation changes inside the planned file impact map.
+- Updated tests or validation notes where the behavior changes.
 - No unrelated churn.
 
 ## Quality Bar

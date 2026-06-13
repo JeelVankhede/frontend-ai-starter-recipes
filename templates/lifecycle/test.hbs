@@ -6,12 +6,12 @@ description: Run or define frontend validation proportional to risk
 
 ## Stage Goal
 
-Run or define the right validation for the frontend change.
+Run or define unit, component, integration, and manual checks proportional to risk. State untested areas explicitly. Do not ship without a visible test result.
 
 ## Inputs Needed
 
 - Changed behavior and affected user flows.
-- Project commands from `.ai/AGENT.md`.
+- Project commands sourced from your project's AGENT documentation.
 - Acceptance criteria.
 - Manual QA requirements.
 - Adapter output paths when generated instructions changed.
@@ -20,8 +20,8 @@ Run or define the right validation for the frontend change.
 
 - Run targeted tests first, then broaden when shared behavior changed.
 - Use component/unit tests for logic and rendering branches.
-- Use E2E smoke checks for critical navigation, forms, auth, and data flows.
-- Include accessibility checks for changed interactive UI.
+- Use end-to-end (E2E) smoke checks for critical navigation, forms, auth, and data flows.
+- Include accessibility checks (keyboard path, focus, screen-reader announcements) for changed interactive UI.
 - Define manual checks when automation is missing.
 - State untested areas plainly.
 

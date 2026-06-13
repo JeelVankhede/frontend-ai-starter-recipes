@@ -38,13 +38,11 @@ describe('askQuestions', () => {
     mockSelectChain();
     vi.mocked(checkbox)
       .mockResolvedValueOnce(['sentry'])
-      .mockResolvedValueOnce(['cursor'])
-      .mockResolvedValueOnce(['plan-review']);
+      .mockResolvedValueOnce(['cursor']);
     const answers = await askQuestions();
     expect(answers.projectName).toBe('proj-x');
     expect(answers.uiFramework).toBe('react');
     expect(answers.ideTargets).toEqual(['cursor']);
-    expect(answers.skills).toEqual(['plan-review']);
   });
 
   it('expands ideTargets when all is selected', async () => {
@@ -52,8 +50,7 @@ describe('askQuestions', () => {
     mockSelectChain();
     vi.mocked(checkbox)
       .mockResolvedValueOnce([])
-      .mockResolvedValueOnce(['all'])
-      .mockResolvedValueOnce(['plan-review']);
+      .mockResolvedValueOnce(['all']);
     const answers = await askQuestions();
     expect(answers.ideTargets).toEqual([
       'cursor',
@@ -62,17 +59,5 @@ describe('askQuestions', () => {
       'antigravity',
       'windsurf',
     ]);
-  });
-
-  it('expands skills when all is selected', async () => {
-    vi.mocked(input).mockResolvedValueOnce('p').mockResolvedValueOnce('d');
-    mockSelectChain();
-    vi.mocked(checkbox)
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce(['cursor'])
-      .mockResolvedValueOnce(['all']);
-    const answers = await askQuestions();
-    expect(answers.skills).toContain('performance-audit');
-    expect(answers.skills).toContain('dependency-audit');
   });
 });

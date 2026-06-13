@@ -26,20 +26,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const packageRootDir = path.resolve(__dirname, '..');
 
-const SKILL_FILENAME = 'SKILL.md' as const;
-
 const RULE_FILES = [
   'architecture',
-  'component-patterns',
-  'styling',
+  'components',
+  'styling-accessibility',
   'routing',
-  'state-management',
-  'data-fetching',
+  'state-and-data-fetching',
   'forms-validation',
-  'performance',
-  'accessibility',
+  'performance-and-testing',
   'seo-meta',
-  'testing',
   'errors-logging',
   'security',
   'environment',
@@ -157,62 +152,6 @@ async function run() {
 
     for (const rule of RULE_FILES) {
       await writer.write(`.ai/rules/${rule}.md`, await engine.render(`rules/${rule}.hbs`, context));
-    }
-
-    if (context.skills.includes('plan-review')) {
-      await writer.write(
-        `.ai/skills/plan-review/${SKILL_FILENAME}`,
-        await engine.render('skills/plan-review.hbs', context),
-      );
-    }
-    if (context.skills.includes('code-review')) {
-      await writer.write(
-        `.ai/skills/code-review/${SKILL_FILENAME}`,
-        await engine.render('skills/code-review-skill.hbs', context),
-      );
-      await writer.write(
-        '.ai/skills/code-review/checklist.md',
-        await engine.render('skills/code-review-checklist.hbs', context),
-      );
-    }
-    if (context.skills.includes('qa')) {
-      await writer.write(`.ai/skills/qa/${SKILL_FILENAME}`, await engine.render('skills/qa.hbs', context));
-    }
-    if (context.skills.includes('ship')) {
-      await writer.write(`.ai/skills/ship/${SKILL_FILENAME}`, await engine.render('skills/ship.hbs', context));
-    }
-    if (context.skills.includes('document-release')) {
-      await writer.write(
-        `.ai/skills/document-release/${SKILL_FILENAME}`,
-        await engine.render('skills/document-release.hbs', context),
-      );
-    }
-    if (context.skills.includes('retro')) {
-      await writer.write(`.ai/skills/retro/${SKILL_FILENAME}`, await engine.render('skills/retro.hbs', context));
-    }
-    if (context.skills.includes('performance-audit')) {
-      await writer.write(
-        `.ai/skills/performance-audit/${SKILL_FILENAME}`,
-        await engine.render('skills/performance-audit.hbs', context),
-      );
-    }
-    if (context.skills.includes('accessibility-audit')) {
-      await writer.write(
-        `.ai/skills/accessibility-audit/${SKILL_FILENAME}`,
-        await engine.render('skills/accessibility-audit.hbs', context),
-      );
-    }
-    if (context.skills.includes('component-audit')) {
-      await writer.write(
-        `.ai/skills/component-audit/${SKILL_FILENAME}`,
-        await engine.render('skills/component-audit.hbs', context),
-      );
-    }
-    if (context.skills.includes('dependency-audit')) {
-      await writer.write(
-        `.ai/skills/dependency-audit/${SKILL_FILENAME}`,
-        await engine.render('skills/dependency-audit.hbs', context),
-      );
     }
 
     await writer.write('.ai/context/domain-map.md', await engine.render('context/domain-map.hbs', context));
