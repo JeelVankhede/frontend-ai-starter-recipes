@@ -1,16 +1,38 @@
 /**
  * VS Code Copilot adapter — renders a single `.github/copilot-instructions.md` merging
  * AGENT body + `## Lifecycle: <Stage>` sections + rule sections from in-memory `RenderedContext`.
- * Real body implemented in WP-B Phase 2 (Wave 1 subagent C).
  * @module adapters/vscode-copilot
  */
+import chalk from 'chalk';
 import type { FileWriter } from '../writer.js';
 import type { RenderedContext, TemplateContext, WriteResult } from '../types.js';
+import { removeFrontmatter } from './helpers.js';
 
 export async function generateVsCodeCopilot(
-  _writer: FileWriter,
-  _rendered: RenderedContext,
+  writer: FileWriter,
+  rendered: RenderedContext,
   _context: TemplateContext,
 ): Promise<WriteResult[]> {
-  return [];
+  const sections: string[] = [];
+
+  // 1. AGENT body (frontmatter stripped)
+  sections.push(removeFrontmatter(rendered.agent));
+
+  // 2. Lifecycle stages as `## Lifecycle: <Stage>` sections
+  for (const [stageName, content] of Object.entries(rendered.lifecycle)) {
+    const heading = `## Lifecycle: ${stageName[0].toUpperCase() + stageName.slice(1)}`;
+    sections.push(`${heading}\n\n${content}`);
+  }
+
+  // 3. Rule sections (frontmatter stripped; each rule already starts with its own `# Title`)
+  for (const [, content] of Object.entries(rendered.rules)) {
+    sections.push(removeFrontmatter(content));
+  }
+
+  const body = sections.map((s) => s.replace(/\s+$/, '')).join('\n\n') + '\n';
+
+  const result = await writer.write('.github/copilot-instructions.md', body);
+
+  console.log(chalk.dim('  ↳ Generated VS Code Copilot configuration'));
+  return [result];
 }

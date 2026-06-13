@@ -2,16 +2,55 @@
  * Claude Code adapter — renders `.claude/rules/<rule>.md`, `.claude/commands/<stage>.md`,
  * and a slim `CLAUDE.md` (AGENT body + load-when pointer index for rules + Lifecycle pointer
  * section for commands) from in-memory `RenderedContext`.
- * Real body implemented in WP-B Phase 2 (Wave 1 subagent B).
  * @module adapters/claude-code
  */
+import chalk from 'chalk';
 import type { FileWriter } from '../writer.js';
 import type { RenderedContext, TemplateContext, WriteResult } from '../types.js';
+import { removeFrontmatter, extractDescription } from './helpers.js';
 
 export async function generateClaudeCode(
-  _writer: FileWriter,
-  _rendered: RenderedContext,
+  writer: FileWriter,
+  rendered: RenderedContext,
   _context: TemplateContext,
 ): Promise<WriteResult[]> {
-  return [];
+  const results: WriteResult[] = [];
+
+  // 1. Per-rule files under .claude/rules/
+  for (const [ruleName, content] of Object.entries(rendered.rules)) {
+    const body = removeFrontmatter(content);
+    results.push(await writer.write(`.claude/rules/${ruleName}.md`, body));
+  }
+
+  // 2. Per-stage lifecycle commands under .claude/commands/
+  for (const [stageName, content] of Object.entries(rendered.lifecycle)) {
+    results.push(await writer.write(`.claude/commands/${stageName}.md`, content));
+  }
+
+  // 3. Slim CLAUDE.md pointer index at output root.
+  const agentBody = removeFrontmatter(rendered.agent);
+  const ruleLines = Object.entries(rendered.rules).map(([ruleName, content]) => {
+    const desc = extractDescription(content) || ruleName;
+    return `- [${ruleName}](.claude/rules/${ruleName}.md) — load when ${desc}.`;
+  });
+  const lifecycleLines = Object.keys(rendered.lifecycle).map(
+    (stageName) => `- [${stageName}](.claude/commands/${stageName}.md) — invoke as /${stageName}.`,
+  );
+
+  const claudeMd = [
+    agentBody,
+    '',
+    '## Rules',
+    '',
+    ...ruleLines,
+    '',
+    '## Lifecycle',
+    '',
+    ...lifecycleLines,
+  ].join('\n');
+
+  results.push(await writer.write('CLAUDE.md', claudeMd));
+
+  console.log(chalk.dim('  ↳ Generated Claude Code configuration'));
+  return results;
 }
