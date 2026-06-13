@@ -120,3 +120,22 @@ export interface TemplateContext extends UserAnswers {
   pagesDir: string;
   storeDir: string;
 }
+
+/**
+ * In-memory render output that adapters consume. Replaces the v1.1 `.ai/` intermediate tree.
+ * `rules` keys are rule basenames (e.g. `architecture`, `state-and-data-fetching`).
+ * `lifecycle` keys are stage names (e.g. `think`, `plan`, ..., `reflect`).
+ */
+export interface RenderedContext {
+  agent: string;
+  rules: Record<string, string>;
+  lifecycle: Record<string, string>;
+}
+
+/** Outcome of a single `FileWriter.write()` call. WP-B always emits `created`; WP-C adds the other statuses. */
+export type WriteStatus = 'created' | 'backed-up' | 'skipped' | 'overwritten';
+
+export interface WriteResult {
+  path: string;
+  status: WriteStatus;
+}

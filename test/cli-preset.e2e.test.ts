@@ -17,7 +17,7 @@ describe('CLI preset e2e', () => {
     }
   });
 
-  it('generates .ai/AGENT.md with react-vite-tailwind preset', async () => {
+  it('generates v1.2 adapter output with react-vite-tailwind preset (no .ai/ tree)', async () => {
     const out = await fs.mkdtemp(path.join(os.tmpdir(), 'fare-e2e-'));
     const r = spawnSync(
       process.execPath,
@@ -29,13 +29,18 @@ describe('CLI preset e2e', () => {
       },
     );
     expect(r.status).toBe(0);
-    const agent = await fs.readFile(path.join(out, '.ai', 'AGENT.md'), 'utf-8');
-    expect(agent.length).toBeGreaterThan(100);
-    expect(agent).toMatch(/react|React|Vite|vite/i);
-    const think = await fs.readFile(path.join(out, '.ai', 'lifecycle', 'think.md'), 'utf-8');
-    const reflect = await fs.readFile(path.join(out, '.ai', 'lifecycle', 'reflect.md'), 'utf-8');
-    expect(think).toMatch(/Think/);
-    expect(reflect).toMatch(/Reflect/);
+    // v1.2 contract: no .ai/ intermediate tree on disk.
+    expect(existsSync(path.join(out, '.ai'))).toBe(false);
+    // react-vite-tailwind preset selects cursor + claude-code adapters.
+    const cursorIndex = await fs.readFile(path.join(out, '.cursor', 'rules', 'index.mdc'), 'utf-8');
+    expect(cursorIndex.length).toBeGreaterThan(100);
+    expect(cursorIndex).toMatch(/react|React|Vite|vite/i);
+    const claudeMd = await fs.readFile(path.join(out, 'CLAUDE.md'), 'utf-8');
+    expect(claudeMd).toMatch(/react|React|Vite|vite/i);
+    const thinkCommand = await fs.readFile(path.join(out, '.claude', 'commands', 'think.md'), 'utf-8');
+    const reflectCommand = await fs.readFile(path.join(out, '.claude', 'commands', 'reflect.md'), 'utf-8');
+    expect(thinkCommand).toMatch(/Think/);
+    expect(reflectCommand).toMatch(/Reflect/);
   });
 
   it('exits non-zero for missing preset', () => {

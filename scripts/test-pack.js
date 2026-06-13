@@ -30,14 +30,27 @@ try {
     stdio: 'inherit',
     env: { ...process.env, CI: '1' },
   });
-  const agentPath = path.join(tmpDir, 'out', '.ai', 'AGENT.md');
-  if (!existsSync(agentPath)) {
-    console.error('Expected out/.ai/AGENT.md not found after preset run');
+  // v1.2: no .ai/ intermediate tree. The nextjs-shadcn preset selects cursor,
+  // claude-code, and vscode-copilot adapters; we sanity-check one file per
+  // selected adapter to confirm the in-memory render → adapter pipeline ran.
+  const cursorIndexPath = path.join(tmpDir, 'out', '.cursor', 'rules', 'index.mdc');
+  if (!existsSync(cursorIndexPath)) {
+    console.error('Expected out/.cursor/rules/index.mdc not found after preset run');
     process.exit(1);
   }
-  const lifecyclePath = path.join(tmpDir, 'out', '.ai', 'lifecycle', 'think.md');
-  if (!existsSync(lifecyclePath)) {
-    console.error('Expected out/.ai/lifecycle/think.md not found after preset run');
+  const claudeMdPath = path.join(tmpDir, 'out', 'CLAUDE.md');
+  if (!existsSync(claudeMdPath)) {
+    console.error('Expected out/CLAUDE.md not found after preset run');
+    process.exit(1);
+  }
+  const copilotPath = path.join(tmpDir, 'out', '.github', 'copilot-instructions.md');
+  if (!existsSync(copilotPath)) {
+    console.error('Expected out/.github/copilot-instructions.md not found after preset run');
+    process.exit(1);
+  }
+  const aiDirPath = path.join(tmpDir, 'out', '.ai');
+  if (existsSync(aiDirPath)) {
+    console.error('Unexpected out/.ai/ directory present in v1.2 output');
     process.exit(1);
   }
   console.log('test:pack passed.');

@@ -13,19 +13,14 @@
   "auth": "oauth2-provider",
   "testFramework": "vitest",
   "e2eFramework": "playwright",
-  "monitoring": ["sentry", "posthog"],
+  "monitoring": [
+    "sentry",
+    "posthog"
+  ],
   "cicd": "vercel",
-  "ideTargets": ["cursor", "claude-code", "vscode-copilot"],
-  "skills": [
-    "plan-review",
-    "code-review",
-    "qa",
-    "ship",
-    "document-release",
-    "retro",
-    "performance-audit",
-    "accessibility-audit",
-    "component-audit",
-    "dependency-audit"
+  "ideTargets": [
+    "cursor",
+    "claude-code",
+    "vscode-copilot"
   ]
 }
