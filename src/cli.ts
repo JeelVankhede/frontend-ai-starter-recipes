@@ -4,7 +4,7 @@
  * @module cli
  */
 
-import { Command } from 'commander';
+import { Command, Option } from 'commander';
 import chalk from 'chalk';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -22,7 +22,7 @@ import { generateVsCodeCopilot } from './adapters/vscode-copilot.js';
 import { generateAntigravity } from './adapters/antigravity.js';
 import { generateWindsurf } from './adapters/windsurf.js';
 import { removeFrontmatter } from './adapters/helpers.js';
-import type { RenderedContext, WriteResult } from './types.js';
+import type { RenderedContext, WriteMode, WriteResult } from './types.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -53,6 +53,11 @@ program
   .description('Generate customized AI agent instructions for your frontend project')
   .option('-o, --output <dir>', 'Output directory (skip prompt)')
   .option('-p, --preset <name>', 'Use a preset configuration')
+  .addOption(
+    new Option('--write-mode <mode>', 'How to handle existing files on re-run')
+      .choices(['backup', 'skip-existing', 'overwrite'])
+      .default('backup'),
+  )
   .parse(process.argv);
 
 async function run() {
@@ -144,7 +149,7 @@ async function run() {
 
     const engine = new TemplateEngine(packageRootDir);
     await engine.initialize();
-    const writer = new FileWriter(outputDir);
+    const writer = new FileWriter(outputDir, options.writeMode as WriteMode, '.fare-backup');
 
     const agentBase = await engine.render('agent.hbs', context);
     const domainMap = await engine.render('context/domain-map.hbs', context);
@@ -191,8 +196,19 @@ async function run() {
     if (context.ideTargets.includes('windsurf'))
       results.push(...(await generateWindsurf(writer, rendered, context)));
 
+    const counts = results.reduce(
+      (acc, r) => {
+        acc[r.status] = (acc[r.status] ?? 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
     console.log(chalk.bold.green(`\n✨ Success! Output saved to: ${outputDir}`));
-    console.log(chalk.dim(`   ${results.length} files written.`));
+    console.log(
+      chalk.dim(
+        `   Generated ${results.length} files (${counts.created ?? 0} created, ${counts['backed-up'] ?? 0} backed up, ${counts.skipped ?? 0} skipped, ${counts.overwritten ?? 0} overwritten).`,
+      ),
+    );
   } catch (err) {
     if (err instanceof Error && err.name === 'ExitPromptError') {
       console.log(chalk.yellow('\nPrompt cancelled by user.'));
