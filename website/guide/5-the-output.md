@@ -1,51 +1,60 @@
 # Understanding the output
 
-## Canonical tree (`.ai/`)
+## Generated output by adapter
 
-The CLI creates repo instructions and adapter files, not a runnable frontend app. Treat the generated `.ai/` tree as a starting operating manual for your project and edit it after reviewing the output.
+The CLI creates repo instructions and adapter files, not a runnable frontend app.
+Files are written directly to each IDE's native paths — no `.ai/` intermediate directory is created.
 
-```
-.ai/
-  AGENT.md
-  lifecycle/      # Think, Plan, Build, Review, Test, Ship, Reflect
-  rules/          # 16 topic markdown files
-  skills/         # e.g. plan-review/SKILL.md, code-review/checklist.md
-  context/
-    domain-map.md
-    tech-stack.md
-  tracking/
-    efficiency.md
-```
+| Adapter | What gets written |
+| --- | --- |
+| **Cursor** | `.cursor/rules/index.mdc` (agent + context) · `.cursor/rules/<rule>.mdc` (13 rules, per-rule globs) · `.cursor/skills/<stage>/SKILL.md` (7 lifecycle stages) |
+| **Claude Code** | `.claude/rules/<rule>.md` (13 rules) · `.claude/commands/<stage>.md` (7 lifecycle stages) · `CLAUDE.md` (load-when pointer index) |
+| **VS Code Copilot** | `.github/copilot-instructions.md` (agent + all rules + all lifecycle stages merged into one file) |
+| **Windsurf** | `.windsurf/rules/<rule>.md` (13 rules) · `.windsurf/rules/lifecycle-<stage>.md` (7 stages) · `.windsurfrules` (agent + context) |
+| **Antigravity** | `.agents/workflows/<stage>.md` (7 lifecycle stages) |
+
+Select one or more adapters during the interactive prompt. Only the files for selected adapters are written.
 
 ## Rules (topics)
 
-Includes architecture, component-patterns, styling, routing, state-management, data-fetching, forms-validation, performance, accessibility, seo-meta, testing, errors-logging, security, environment, git-conventions, pre-commit.
+13 rule files covering: architecture, components, styling-accessibility, routing, state-and-data-fetching, forms-validation, performance-and-testing, seo-meta, errors-logging, security, environment, git-conventions, pre-commit.
 
 ## Lifecycle
 
-Lifecycle files live under `.ai/lifecycle/`:
+The 7 lifecycle stages are written in adapter-native paths (see table above):
 
-- `think.md` — understand goal, stack, constraints, and existing code before planning
-- `plan.md` — name affected routes, components, state/data boundaries, risks, and tests
-- `build.md` — implement only the approved frontend scope
-- `review.md` — check correctness, accessibility, performance, maintainability, and adapter output
-- `test.md` — run or define validation proportional to risk
-- `ship.md` — summarize changes, validation, release notes, and rollback notes
-- `reflect.md` — capture template gaps and follow-up tasks
+- **think** — understand goal, stack, constraints, and existing code before planning
+- **plan** — name affected routes, components, state/data boundaries, risks, and tests
+- **build** — implement only the approved frontend scope
+- **review** — check correctness, accessibility, performance, maintainability
+- **test** — run or define validation proportional to risk
+- **ship** — summarize changes, validation, release notes, and rollback notes
+- **reflect** — capture template gaps and follow-up tasks
 
 ## Cursor
 
-- `.cursor/rules/index.mdc` — master instructions (`alwaysApply`)  
-- `.cursor/rules/lifecycle.mdc` — lifecycle workflow contract
-- `.cursor/rules/<rule>.mdc` — per-rule `globs` where relevant (e.g. `component-patterns`, `testing`)  
-- `.cursor/skills/<skill>/` — copied skill files  
+- `.cursor/rules/index.mdc` — agent identity + project context (`alwaysApply: true`)
+- `.cursor/rules/<rule>.mdc` — per-rule file with `globs` where relevant (e.g. `components`, `forms-validation`)
+- `.cursor/skills/<stage>/SKILL.md` — lifecycle stage invoked via `/think`, `/plan`, etc.
 
-## Claude Code / Copilot / Windsurf
+## Claude Code
 
-Merged markdown (`CLAUDE.md`, `.github/copilot-instructions.md`, `.windsurfrules`) includes `AGENT.md`, lifecycle files, and rules. Claude skill folders are copied when applicable.
+- `.claude/rules/<rule>.md` — per-rule file (loaded on demand)
+- `.claude/commands/<stage>.md` — lifecycle stage invoked from the command palette
+- `CLAUDE.md` — slim pointer index listing all rules and lifecycle commands with `load-when` paths
+
+## VS Code Copilot
+
+`.github/copilot-instructions.md` — single merged file with agent instructions, all rules, and all lifecycle sections. Reference sections by name in Copilot chat.
+
+## Windsurf
+
+- `.windsurfrules` — agent + context (always-on)
+- `.windsurf/rules/<rule>.md` — per-rule files
+- `.windsurf/rules/lifecycle-<stage>.md` — per-stage lifecycle files
 
 ## Antigravity
 
-`.agents/workflows/<skill>.md` from each `SKILL.md`.
+`.agents/workflows/<stage>.md` — one workflow file per lifecycle stage (7 total).
 
 **Next:** [Recommended workflow](/guide/6-workflow).

@@ -28,7 +28,20 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run docs:build
+      - name: Build v1.1 docs snapshot
+        run: |
+          git fetch --tags
+          git checkout v1.1.0 -- website/ package.json package-lock.json
+          npm ci
+          npm run docs:build
+          cp -r website/.vitepress/dist /tmp/v1.1-docs
+          git checkout HEAD -- website/ package.json package-lock.json
+      - name: Build v1.2 docs
+        run: |
+          npm ci
+          npm run docs:build
+          mkdir -p website/.vitepress/dist/v1.1
+          cp -r /tmp/v1.1-docs/. website/.vitepress/dist/v1.1/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: website/.vitepress/dist

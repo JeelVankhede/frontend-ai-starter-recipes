@@ -37,6 +37,7 @@ export default withMermaid(
               { text: 'Usage', link: '/guide/4-usage' },
               { text: 'Understanding the output', link: '/guide/5-the-output' },
               { text: 'Recommended workflow', link: '/guide/6-workflow' },
+              { text: 'Lifecycle in practice', link: '/guide/7-lifecycle-demo' },
             ],
           },
         ],

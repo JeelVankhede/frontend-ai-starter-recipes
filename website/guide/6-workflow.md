@@ -11,7 +11,7 @@ sequenceDiagram
   You->>Agent: Feature / bug in plain language
   Agent->>You: Plan
   You->>Plan: Validate plan
-  You->>Agent: Implement using .ai/rules
+  You->>Agent: Implement using generated rules
   You->>CR: Review diff (checklist)
   You->>QA: Build, lint, test, a11y, Lighthouse
   You->>Ship: Commit / PR
@@ -19,9 +19,8 @@ sequenceDiagram
 
 ## After generation
 
-1. Edit **`.ai/context/domain-map.md`** with real domains and paths.  
-2. Lock **`.ai/context/tech-stack.md`** to libraries you allow.  
-3. Use **`.ai/tracking/efficiency.md`** when the model repeats the same mistake — update a rule.
+1. Review the generated agent instructions in your IDE (e.g. `.cursor/rules/index.mdc` for Cursor, `CLAUDE.md` for Claude Code). Edit the domain map and tech stack sections to reflect your real project.
+2. When the model repeats the same mistake — add or tighten the relevant rule file and re-run the CLI with `--write-mode overwrite` to update.
 
 ## Bonus skills
 
