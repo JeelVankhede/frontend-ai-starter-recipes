@@ -1,40 +1,38 @@
 /**
- * Writes `.github/copilot-instructions.md` from merged `.ai` agent + rules.
+ * VS Code Copilot adapter — renders a single `.github/copilot-instructions.md` merging
+ * AGENT body + `## Lifecycle: <Stage>` sections + rule sections from in-memory `RenderedContext`.
  * @module adapters/vscode-copilot
  */
-import fs from 'fs/promises';
-import path from 'path';
 import chalk from 'chalk';
 import type { FileWriter } from '../writer.js';
-import { readLifecycleContent, removeFrontmatter } from './lifecycle.js';
+import type { RenderedContext, TemplateContext, WriteResult } from '../types.js';
+import { removeFrontmatter } from './helpers.js';
 
-export async function generateVsCodeCopilot(outputDir: string, writer: FileWriter) {
-  const aiDir = path.join(outputDir, '.ai');
+export async function generateVsCodeCopilot(
+  writer: FileWriter,
+  rendered: RenderedContext,
+  _context: TemplateContext,
+): Promise<WriteResult[]> {
+  const sections: string[] = [];
 
-  try {
-    let mergedContent = '';
+  // 1. AGENT body (frontmatter stripped)
+  sections.push(removeFrontmatter(rendered.agent));
 
-    const agentContent = await fs.readFile(path.join(aiDir, 'AGENT.md'), 'utf-8');
-    mergedContent += removeFrontmatter(agentContent) + '\n\n';
-
-    mergedContent += await readLifecycleContent(aiDir);
-
-    const rulesDir = path.join(aiDir, 'rules');
-    try {
-      const ruleFiles = await fs.readdir(rulesDir);
-      for (const file of ruleFiles) {
-        if (!file.endsWith('.md')) continue;
-        const content = await fs.readFile(path.join(rulesDir, file), 'utf-8');
-        mergedContent += removeFrontmatter(content) + '\n\n';
-      }
-    } catch {
-      /* no rules */
-    }
-
-    await writer.write('.github/copilot-instructions.md', mergedContent);
-
-    console.log(chalk.dim('  ↳ Generated VS Code Copilot configuration'));
-  } catch (err) {
-    console.error(chalk.red('Failed to generate VS Code Copilot config:'), err);
+  // 2. Lifecycle stages as `## Lifecycle: <Stage>` sections
+  for (const [stageName, content] of Object.entries(rendered.lifecycle)) {
+    const heading = `## Lifecycle: ${stageName[0].toUpperCase() + stageName.slice(1)}`;
+    sections.push(`${heading}\n\n${content}`);
   }
+
+  // 3. Rule sections (frontmatter stripped; each rule already starts with its own `# Title`)
+  for (const [, content] of Object.entries(rendered.rules)) {
+    sections.push(removeFrontmatter(content));
+  }
+
+  const body = sections.map((s) => s.replace(/\s+$/, '')).join('\n\n') + '\n';
+
+  const result = await writer.write('.github/copilot-instructions.md', body);
+
+  console.log(chalk.dim('  ↳ Generated VS Code Copilot configuration'));
+  return [result];
 }

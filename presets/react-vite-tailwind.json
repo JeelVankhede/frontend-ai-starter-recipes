@@ -13,19 +13,15 @@
   "auth": "none",
   "testFramework": "vitest",
   "e2eFramework": "playwright",
-  "monitoring": ["sentry"],
+  "monitoring": [
+    "sentry"
+  ],
   "cicd": "github-actions",
-  "ideTargets": ["cursor", "claude-code", "vscode-copilot", "antigravity", "windsurf"],
-  "skills": [
-    "plan-review",
-    "code-review",
-    "qa",
-    "ship",
-    "document-release",
-    "retro",
-    "performance-audit",
-    "accessibility-audit",
-    "component-audit",
-    "dependency-audit"
+  "ideTargets": [
+    "cursor",
+    "claude-code",
+    "vscode-copilot",
+    "antigravity",
+    "windsurf"
   ]
 }
