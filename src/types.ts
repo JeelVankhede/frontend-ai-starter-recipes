@@ -132,10 +132,21 @@ export interface RenderedContext {
   lifecycle: Record<string, string>;
 }
 
-/** Outcome of a single `FileWriter.write()` call. WP-B always emits `created`; WP-C adds the other statuses. */
+/** Outcome of a single `FileWriter.write()` call. */
 export type WriteStatus = 'created' | 'backed-up' | 'skipped' | 'overwritten';
 
 export interface WriteResult {
   path: string;
   status: WriteStatus;
 }
+
+/**
+ * Write mode controlling `FileWriter.write()` behavior when a target path already exists.
+ * - `backup`: copy existing file to `<path><suffix>`, then write new content.
+ * - `skip-existing`: leave existing file untouched.
+ * - `overwrite`: write unconditionally.
+ *
+ * The default is `backup` so re-running the CLI on an existing consumer project
+ * never silently destroys local edits.
+ */
+export type WriteMode = 'backup' | 'skip-existing' | 'overwrite';
