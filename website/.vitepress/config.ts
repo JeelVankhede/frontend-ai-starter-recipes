@@ -40,6 +40,12 @@ export default withMermaid(
               { text: 'Lifecycle in practice', link: '/guide/7-lifecycle-demo' },
             ],
           },
+          {
+            text: 'Migration',
+            items: [
+              { text: 'Upgrading to v1.2', link: '/guide/8-migration-v1.2' },
+            ],
+          },
         ],
         '/community/': [
           {

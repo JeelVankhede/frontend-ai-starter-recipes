@@ -88,6 +88,36 @@ The generated lifecycle files guide your AI through every coding task — from u
 
 See the **[full worked example →](https://jeelvankhede.github.io/frontend-ai-starter-recipes/guide/7-lifecycle-demo)**
 
+## Upgrading from v1.1
+
+### What changed
+
+v1.2 no longer writes a `.ai/` directory. Rules, lifecycle files, and agent instructions are written directly to your IDE's native paths — only the files your IDE actually reads.
+
+### New output paths
+
+| Adapter | v1.2 output location |
+| --- | --- |
+| Cursor | `.cursor/rules/<rule>.mdc` · `.cursor/skills/<stage>/SKILL.md` |
+| Claude Code | `.claude/rules/<rule>.md` · `.claude/commands/<stage>.md` · `CLAUDE.md` |
+| VS Code Copilot | `.github/copilot-instructions.md` (all merged) |
+| Windsurf | `.windsurf/rules/<rule>.md` · `.windsurf/rules/lifecycle-<stage>.md` · `.windsurfrules` |
+| Antigravity | `.agents/workflows/<stage>.md` |
+
+### Re-running the CLI
+
+Re-running on an existing project backs up existing adapter files to `<file>.fare-backup` by default. Use `--write-mode overwrite` to skip backups.
+
+### Manual cleanup
+
+After confirming v1.2 output is correct:
+
+```bash
+rm -rf .ai/
+```
+
+See the **[full migration guide →](https://jeelvankhede.github.io/frontend-ai-starter-recipes/guide/8-migration-v1.2)** for the complete before/after comparison, rule change table, and FAQ.
+
 ## Known Limitations
 
 - This is an early community release, not a mature or enterprise-ready governance product.
