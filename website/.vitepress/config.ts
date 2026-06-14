@@ -3,7 +3,7 @@ import { withMermaid } from 'vitepress-plugin-mermaid';
 
 export default withMermaid(
   defineConfig({
-    title: 'FARE Docs',
+    title: 'Fare — Frontend Ai starter REcipes',
     description:
       'Documentation for frontend-ai-starter-recipes — AI agent rules, skills, and workflows for frontend projects.',
     base: '/frontend-ai-starter-recipes/',

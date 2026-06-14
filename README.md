@@ -1,4 +1,4 @@
-# Frontend AI Starter Recipes
+# Fare — **F**rontend **A**i starter **RE**cipes
 
 [![CI](https://github.com/JeelVankhede/frontend-ai-starter-recipes/actions/workflows/ci.yml/badge.svg)](https://github.com/JeelVankhede/frontend-ai-starter-recipes/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/frontend-ai-starter-recipes.svg)](https://www.npmjs.com/package/frontend-ai-starter-recipes)

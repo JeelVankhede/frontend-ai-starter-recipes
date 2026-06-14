@@ -23,6 +23,7 @@ import { generateAntigravity } from './adapters/antigravity.js';
 import { generateWindsurf } from './adapters/windsurf.js';
 import { removeFrontmatter } from './adapters/helpers.js';
 import type { RenderedContext, WriteMode, WriteResult } from './types.js';
+import { BANNER_TITLE } from './banner.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -63,7 +64,7 @@ program
 async function run() {
   const options = program.opts();
 
-  console.log(chalk.bold.cyan('\n🎨 Frontend AI Starter Recipes'));
+  console.log(chalk.bold.cyan(`\n🎨 ${BANNER_TITLE}`));
   console.log(chalk.dim("Let's customize your AI agent instructions.\n"));
 
   try {
