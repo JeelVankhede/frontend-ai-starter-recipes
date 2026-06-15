@@ -9,6 +9,17 @@ export default withMermaid(
     base: '/frontend-ai-starter-recipes/',
     outDir: '.vitepress/dist',
 
+    head: [
+      [
+        'script',
+        {},
+        `(function(c,a){window.mixpanel=a;var b=c.createElement("script");b.type="text/javascript";b.async=!0;b.src="https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";var d=c.getElementsByTagName("script")[0];d.parentNode.insertBefore(b,d);a._i=[];a.init=function(b,c,f){function d(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]);a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}var g=a;"undefined"!==typeof f?g=a[f]=[]:f="mixpanel";g.people=g.people||[];var h="disable track track_pageview track_links track_forms register register_once unregister identify name_tag set_config".split(" ");for(var e=0;e<h.length;e++)d(g,h[e]);a._i.push([b,c,f])};a.__SV=1.1})(document,window.mixpanel||[]);
+  if ("${process.env.VITE_MIXPANEL_TOKEN ?? ''}") {
+    mixpanel.init("${process.env.VITE_MIXPANEL_TOKEN ?? ''}");
+  }`,
+      ],
+    ],
+
     themeConfig: {
       logo: '/logo.svg',
 

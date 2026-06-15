@@ -25,6 +25,8 @@ import { generateWindsurf } from './adapters/windsurf.js';
 import { removeFrontmatter } from './adapters/helpers.js';
 import type { RenderedContext, TemplateContext, WriteMode, WriteResult } from './types.js';
 import { BANNER_TITLE, renderStartupBanner, renderGenerationSummary, ADAPTER_NAMES } from './banner.js';
+import { resolveTrackingConsent } from './config.js';
+import { track } from './telemetry.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -92,6 +94,8 @@ async function run() {
     ),
   );
   console.log(chalk.dim("\nLet's customize your AI agent instructions.\n"));
+
+  const trackingAllowed = await resolveTrackingConsent();
 
   try {
     let outputDir = '';
@@ -261,10 +265,35 @@ async function run() {
         }),
       ),
     );
+
+    if (trackingAllowed) {
+      track('cli_run', {
+        preset: options.preset ?? null,
+        adapters: context.ideTargets,
+        adapter_count: context.ideTargets.length,
+        write_mode: writeMode,
+        success: true,
+        node_version: process.version,
+        os_platform: process.platform,
+        fare_version: pkg.version,
+      });
+    }
   } catch (err) {
     if (err instanceof Error && err.name === 'ExitPromptError') {
       console.log(chalk.yellow('\nPrompt cancelled by user.'));
       process.exit(0);
+    }
+    if (trackingAllowed) {
+      track('cli_run', {
+        preset: options.preset ?? null,
+        adapters: [],
+        adapter_count: 0,
+        write_mode: options.writeMode ?? 'backup',
+        success: false,
+        node_version: process.version,
+        os_platform: process.platform,
+        fare_version: pkg.version,
+      });
     }
     console.error(chalk.red('\n❌ Error generating templates:'), err);
     process.exit(1);
