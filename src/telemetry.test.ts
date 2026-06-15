@@ -60,7 +60,7 @@ describe('track', () => {
 
     await track('cli_run', { preset: 'react-vite-tailwind' });
 
-    expect(mockInit).toHaveBeenCalledWith('test-token', { keep_alive: false });
+    expect(mockInit).toHaveBeenCalledWith('test-token', { keep_alive: false, ip: false });
     expect(mockClient.track).toHaveBeenCalledWith(
       'cli_run',
       { source: 'cli', preset: 'react-vite-tailwind' },
