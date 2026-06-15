@@ -3,11 +3,11 @@
  * `.cursor/skills/<stage>/SKILL.md` (lifecycle as skills) from in-memory `RenderedContext`.
  * @module adapters/cursor
  */
-import chalk from 'chalk';
 import type { FileWriter } from '../writer.js';
 import type { RenderedContext, TemplateContext, WriteResult } from '../types.js';
 import { removeFrontmatter, extractDescription, formatGlobs } from './helpers.js';
 import { RULE_CURSOR_METADATA, type CursorRuleMeta } from '../rule-cursor-metadata.js';
+import { sleep } from '../sleep.js';
 
 function formatDirective(directive: CursorRuleMeta): string {
   if ('globs' in directive) {
@@ -27,6 +27,7 @@ export async function generateCursor(
   const indexBody = removeFrontmatter(rendered.agent);
   const indexContent = `---\ndescription: Master Instructions\nalwaysApply: true\n---\n\n${indexBody}`;
   results.push(await writer.write('.cursor/rules/index.mdc', indexContent));
+  await sleep(300);
 
   // 2. Per-rule .mdc files
   for (const [ruleName, content] of Object.entries(rendered.rules)) {
@@ -36,13 +37,14 @@ export async function generateCursor(
     const frontmatter = `---\ndescription: ${description}\n${formatDirective(directive)}\n---`;
     const fileContent = `${frontmatter}\n\n${body}`;
     results.push(await writer.write(`.cursor/rules/${ruleName}.mdc`, fileContent));
+    await sleep(300);
   }
 
   // 3. Lifecycle stages as skills
   for (const [stageName, content] of Object.entries(rendered.lifecycle)) {
     results.push(await writer.write(`.cursor/skills/${stageName}/SKILL.md`, content));
+    await sleep(300);
   }
 
-  console.log(chalk.dim('  ↳ Generated Cursor configuration'));
   return results;
 }

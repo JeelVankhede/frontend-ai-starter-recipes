@@ -3,9 +3,9 @@
  * from in-memory `RenderedContext`. No rules, no AGENT, no skills.
  * @module adapters/antigravity
  */
-import chalk from 'chalk';
 import type { FileWriter } from '../writer.js';
 import type { RenderedContext, TemplateContext, WriteResult } from '../types.js';
+import { sleep } from '../sleep.js';
 
 export async function generateAntigravity(
   writer: FileWriter,
@@ -16,8 +16,8 @@ export async function generateAntigravity(
 
   for (const [stageName, content] of Object.entries(rendered.lifecycle)) {
     results.push(await writer.write(`.agents/workflows/${stageName}.md`, content));
+    await sleep(300);
   }
 
-  console.log(chalk.dim('  ↳ Generated Antigravity workflows'));
   return results;
 }

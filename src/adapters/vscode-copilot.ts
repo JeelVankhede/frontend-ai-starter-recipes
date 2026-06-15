@@ -3,10 +3,10 @@
  * AGENT body + `## Lifecycle: <Stage>` sections + rule sections from in-memory `RenderedContext`.
  * @module adapters/vscode-copilot
  */
-import chalk from 'chalk';
 import type { FileWriter } from '../writer.js';
 import type { RenderedContext, TemplateContext, WriteResult } from '../types.js';
 import { removeFrontmatter } from './helpers.js';
+import { sleep } from '../sleep.js';
 
 export async function generateVsCodeCopilot(
   writer: FileWriter,
@@ -32,7 +32,7 @@ export async function generateVsCodeCopilot(
   const body = sections.map((s) => s.replace(/\s+$/, '')).join('\n\n') + '\n';
 
   const result = await writer.write('.github/copilot-instructions.md', body);
+  await sleep(300);
 
-  console.log(chalk.dim('  ↳ Generated VS Code Copilot configuration'));
   return [result];
 }

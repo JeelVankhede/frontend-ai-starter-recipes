@@ -2,7 +2,9 @@
  * Edge-case tests for the five IDE adapters: empty inputs, fallbacks, and
  * per-adapter quirks. All inputs are in-memory `RenderedContext` values.
  */
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+vi.mock('../src/sleep.js', () => ({ sleep: vi.fn().mockResolvedValue(undefined) }));
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';
@@ -84,6 +86,21 @@ describe('IDE adapters — edge cases', () => {
     // description falls back to rule basename ("architecture")
     expect(file).toMatch(/^description:\s*architecture$/m);
     expect(file).toMatch(/alwaysApply:\s*true/);
+  });
+
+  it('Claude Code: rule without description frontmatter falls back to rule name in CLAUDE.md pointer', async () => {
+    const writer = new FileWriter(tmp);
+    const ctx: RenderedContext = {
+      agent: '# Agent\n',
+      rules: { architecture: '# Architecture\n\nNo frontmatter here.\n' },
+      lifecycle: {},
+    };
+    await generateClaudeCode(writer, ctx, FAKE_CONTEXT);
+
+    const claudeMd = await fs.readFile(path.join(tmp, 'CLAUDE.md'), 'utf-8');
+    expect(claudeMd).toMatch(
+      /- \[architecture\]\(\.claude\/rules\/architecture\.md\) — load when architecture\./,
+    );
   });
 
   it('Claude Code: EMPTY_RENDERED writes CLAUDE.md with Rules + Lifecycle headings but no list items', async () => {

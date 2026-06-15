@@ -32,6 +32,41 @@ Publishing via **Actions → Release** ([`release.yml`](.github/workflows/releas
 
 ---
 
+## Testing docs locally
+
+### Single version
+
+```bash
+cd website && npm run docs:dev
+```
+
+Docs run at http://localhost:5173. The version switcher in the nav is non-functional locally — it targets deployed GitHub Pages paths.
+
+### Side-by-side version comparison (v1.1 vs v1.2)
+
+Use `git worktree` to check out both versions simultaneously without cloning twice:
+
+```bash
+# From the repo root
+git worktree add ../fare-v1.1 v1.1.0
+
+# Terminal 1 — v1.1
+cd ../fare-v1.1/website && npm install && npm run docs:dev -- --port 5174
+
+# Terminal 2 — v1.2 (release branch)
+cd <repo>/website && npm run docs:dev -- --port 5173
+```
+
+Open http://localhost:5173 (v1.2) and http://localhost:5174 (v1.1) side by side.
+
+Clean up the worktree when done:
+
+```bash
+git worktree remove ../fare-v1.1
+```
+
+---
+
 ## Questions
 
 Open an [issue](https://github.com/JeelVankhede/frontend-ai-starter-recipes/issues) on GitHub.

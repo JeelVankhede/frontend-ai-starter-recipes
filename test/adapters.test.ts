@@ -2,7 +2,9 @@
  * Integration tests for the five IDE adapters using in-memory `RenderedContext`.
  * Replaces the v1.1 `minimal-ai/` on-disk fixture seeding.
  */
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+vi.mock('../src/sleep.js', () => ({ sleep: vi.fn().mockResolvedValue(undefined) }));
 import fs from 'fs/promises';
 import path from 'path';
 import os from 'os';

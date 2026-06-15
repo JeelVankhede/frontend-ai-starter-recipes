@@ -22,7 +22,7 @@ features:
     details: plan-review, code-review, QA, ship, performance-audit, accessibility-audit, component-audit, and more — repeatable quality without re-prompting.
   - title: Multi-IDE adapters
     icon: 🖥️
-    details: One canonical .ai/ tree becomes Cursor rules, Claude Code, Copilot instructions, Antigravity workflows, or Windsurf rules.
+    details: Your stack choices render directly into Cursor rules, Claude Code instructions, Copilot config, Antigravity workflows, or Windsurf rules — pick the IDEs you use.
 ---
 
 ## How it works in 30 seconds
@@ -30,13 +30,12 @@ features:
 ```mermaid
 flowchart LR
   A[You answer prompts] --> B[CLI renders templates]
-  B --> C[".ai/ rules + skills"]
-  C --> D[IDE-specific files]
-  D --> E[Agent follows your standards]
+  B --> C[IDE-native files]
+  C --> D[Agent follows your standards]
 ```
 
 1. **Run** `npx frontend-ai-starter-recipes` (or `fare` if installed globally) and point at your project folder.
-2. **Get** a `.ai/` directory — your single source of truth — plus files your IDE understands.
+2. **Get** adapter-native files for every IDE you selected — Cursor rules, a `CLAUDE.md`, Copilot instructions, Windsurf rules, or Antigravity workflows. Nothing else lands in your project.
 3. **Ship UI** with agents that already know your Tailwind vs CSS Modules, Zustand vs Pinia, Playwright vs Cypress, and more.
 
 ::: tip Next step
