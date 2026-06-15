@@ -37,26 +37,17 @@ export interface StartupBannerInput {
   docsUrl: string;
 }
 
-/** Renders the 6-line boxed startup block (top + title + 2× description + blank + docs + bottom). */
+/** Renders the boxed startup block (title + description) with the docs URL as plain text below the box. */
 export function renderStartupBanner(input: StartupBannerInput): string {
   const titleLine = `  ${input.title}  v${input.version}`;
-  const docsLine = formatDocsLine(input.docsUrl);
   return [
     TOP,
     boxLine(titleLine),
     boxLine(`  ${input.description[0]}`),
     boxLine(`  ${input.description[1]}`),
-    boxLine(''),
-    boxLine(docsLine),
     BOTTOM,
+    `  Docs: ${input.docsUrl}`,
   ].join('\n');
-}
-
-function formatDocsLine(url: string): string {
-  const prefix = '  Docs: ';
-  const budget = INNER_WIDTH - prefix.length;
-  if (url.length <= budget) return `${prefix}${url}`;
-  return `${prefix}${url.slice(0, budget - 1)}…`;
 }
 
 export interface GenerationSummaryInput {
@@ -74,7 +65,7 @@ const STATUS_GLYPH: Record<WriteStatus, string> = {
   overwritten: '↺ Overwritten',
 };
 
-const ADAPTER_NAMES: Record<string, string> = {
+export const ADAPTER_NAMES: Record<string, string> = {
   cursor: 'Cursor',
   'claude-code': 'Claude Code',
   'vscode-copilot': 'VS Code Copilot',
@@ -92,13 +83,10 @@ const IDE_NEXT_STEPS: Record<string, string> = {
     '→ In Antigravity: lifecycle workflows are in .agents/workflows/<stage>.md.',
 };
 
-/** Renders the boxed `Generated for` header + per-adapter groups + totals + Next Steps block. */
+/** Renders the boxed `Generated for` header + per-adapter groups + boxed Summary/Next Steps footer.
+ *  Both boxes share a single dynamic width derived from the widest piece of content. */
 export function renderGenerationSummary(input: GenerationSummaryInput): string {
-  const lines: string[] = [];
-  lines.push(TOP);
-  lines.push(boxLine(`  Generated for: ${input.projectLabel}`));
-  lines.push(BOTTOM);
-  lines.push('');
+  const headerLabel = `  Generated for: ${input.projectLabel}`;
 
   let total = 0;
   const totals: Record<WriteStatus, number> = {
@@ -108,42 +96,58 @@ export function renderGenerationSummary(input: GenerationSummaryInput): string {
     overwritten: 0,
   };
 
+  const adapterLines: string[] = [];
   for (const adapter of input.ideTargets) {
     const results = input.byAdapter[adapter] ?? [];
     if (results.length === 0) continue;
-    lines.push(`  Adapter: ${ADAPTER_NAMES[adapter] ?? adapter}`);
+    adapterLines.push(`  Adapter: ${ADAPTER_NAMES[adapter] ?? adapter}`);
     for (const r of results) {
-      lines.push(`  ${STATUS_GLYPH[r.status]}  ${r.path}`);
+      adapterLines.push(`  ${STATUS_GLYPH[r.status]}  ${r.path}`);
       totals[r.status] += 1;
       total += 1;
     }
-    lines.push('');
+    adapterLines.push('');
   }
 
-  lines.push(
-    `  Summary: ${total} files written  (${totals.created} created, ${totals['backed-up']} backed up, ${totals.skipped} skipped, ${totals.overwritten} overwritten)`,
+  const footer: string[] = [];
+  footer.push(
+    `Summary: ${total} files written  (${totals.created} created, ${totals['backed-up']} backed up, ${totals.skipped} skipped, ${totals.overwritten} overwritten)`,
   );
-  lines.push('');
-  lines.push('─'.repeat(60));
-  lines.push('');
-  lines.push('  Next steps');
-  lines.push('');
-  lines.push('  1. Open your project in your IDE');
-  lines.push('     → Your IDE will load the generated rules automatically.');
-  lines.push('');
-  lines.push('  2. Start a task using the lifecycle');
+  footer.push('');
+  footer.push('Next steps');
+  footer.push('');
+  footer.push('1. Open your project in your IDE');
+  footer.push('   → Your IDE will load the generated rules automatically.');
+  footer.push('');
+  footer.push('2. Start a task using the lifecycle');
   for (const adapter of input.ideTargets) {
     const step = IDE_NEXT_STEPS[adapter];
-    if (step) lines.push(`     ${step}`);
+    if (step) footer.push(`   ${step}`);
   }
+  footer.push('');
+  footer.push('3. The 7 lifecycle stages guide your AI through every feature:');
+  footer.push('   Think → Plan → Build → Review → Test → Ship → Reflect');
+  footer.push('');
+  footer.push('4. Re-running this CLI will back up existing files automatically.');
+  footer.push('   Use --write-mode overwrite to skip backups.');
+  footer.push('');
+  footer.push(`Docs → ${input.docsUrl}`);
+
+  // Unified inner width: widest of header label, footer lines, or startup banner width.
+  const innerW = Math.max(INNER_WIDTH, headerLabel.length, ...footer.map((l) => l.length));
+  const boxTop = `╭${'─'.repeat(innerW + 2)}╮`;
+  const boxBot = `╰${'─'.repeat(innerW + 2)}╯`;
+  const row = (s: string) => `│ ${s.padEnd(innerW)} │`;
+
+  const lines: string[] = [];
+  lines.push(boxTop);
+  lines.push(row(headerLabel));
+  lines.push(boxBot);
   lines.push('');
-  lines.push('  3. The 7 lifecycle stages guide your AI through every feature:');
-  lines.push('     Think → Plan → Build → Review → Test → Ship → Reflect');
-  lines.push('');
-  lines.push('  4. Re-running this CLI will back up existing files automatically.');
-  lines.push('     Use --write-mode overwrite to skip backups.');
-  lines.push('');
-  lines.push(`  Docs → ${input.docsUrl}`);
+  lines.push(...adapterLines);
+  lines.push(boxTop);
+  for (const l of footer) lines.push(row(l));
+  lines.push(boxBot);
 
   return lines.join('\n');
 }

@@ -17,6 +17,9 @@
   "cicd": "netlify",
   "ideTargets": [
     "cursor",
-    "vscode-copilot"
+    "claude-code",
+    "vscode-copilot",
+    "antigravity",
+    "windsurf"
   ]
 }

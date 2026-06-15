@@ -4,10 +4,10 @@
  * section for commands) from in-memory `RenderedContext`.
  * @module adapters/claude-code
  */
-import chalk from 'chalk';
 import type { FileWriter } from '../writer.js';
 import type { RenderedContext, TemplateContext, WriteResult } from '../types.js';
 import { removeFrontmatter, extractDescription } from './helpers.js';
+import { sleep } from '../sleep.js';
 
 export async function generateClaudeCode(
   writer: FileWriter,
@@ -20,11 +20,13 @@ export async function generateClaudeCode(
   for (const [ruleName, content] of Object.entries(rendered.rules)) {
     const body = removeFrontmatter(content);
     results.push(await writer.write(`.claude/rules/${ruleName}.md`, body));
+    await sleep(300);
   }
 
   // 2. Per-stage lifecycle commands under .claude/commands/
   for (const [stageName, content] of Object.entries(rendered.lifecycle)) {
     results.push(await writer.write(`.claude/commands/${stageName}.md`, content));
+    await sleep(300);
   }
 
   // 3. Slim CLAUDE.md pointer index at output root.
@@ -50,7 +52,7 @@ export async function generateClaudeCode(
   ].join('\n');
 
   results.push(await writer.write('CLAUDE.md', claudeMd));
+  await sleep(300);
 
-  console.log(chalk.dim('  ↳ Generated Claude Code configuration'));
   return results;
 }

@@ -1,9 +1,10 @@
 # Understanding the output
 
-## Generated output by adapter
+## What gets generated
 
-The CLI creates repo instructions and adapter files, not a runnable frontend app.
-Files are written directly to each IDE's native paths — no `.ai/` intermediate directory is created.
+The CLI writes adapter-native files directly into your project. You get only the files for the IDEs you selected — nothing else is created.
+
+Commit these files like any other project config. The CLI creates AI instructions and adapter files, not runnable application code. Review and edit the generated content before treating it as authoritative.
 
 | Adapter | What gets written |
 | --- | --- |
@@ -15,11 +16,25 @@ Files are written directly to each IDE's native paths — no `.ai/` intermediate
 
 Select one or more adapters during the interactive prompt. Only the files for selected adapters are written.
 
-## Rules (topics)
+## Rules
 
-13 rule files covering: architecture, components, styling-accessibility, routing, state-and-data-fetching, forms-validation, performance-and-testing, seo-meta, errors-logging, security, environment, git-conventions, pre-commit.
+| Rule file | What it controls |
+| --- | --- |
+| `architecture.md` | Component layout, rendering strategy, domain structure |
+| `components.md` | Component design, props contracts, composition patterns |
+| `styling-accessibility.md` | Styling approach, a11y requirements, keyboard/focus |
+| `state-and-data-fetching.md` | State strategy, query patterns, cache policy |
+| `routing.md` | Route structure, navigation, meta-framework conventions |
+| `forms-validation.md` | Form strategy, validation, submission patterns |
+| `performance-and-testing.md` | CWV, bundle size, testing strategy and framework idioms |
+| `errors-logging.md` | Error handling, logging, observability |
+| `security.md` | Auth, CSRF, secrets handling |
+| `seo-meta.md` | Meta tags, structured data, SSR/SSG conventions |
+| `environment.md` | Config, env files, CI flags |
+| `git-conventions.md` | Branches, commits, PR scope |
+| `pre-commit.md` | Build / lint / test gates before commit |
 
-## Lifecycle
+## Lifecycle stages
 
 The 7 lifecycle stages are written in adapter-native paths (see table above):
 
@@ -31,30 +46,66 @@ The 7 lifecycle stages are written in adapter-native paths (see table above):
 - **ship** — summarize changes, validation, release notes, and rollback notes
 - **reflect** — capture template gaps and follow-up tasks
 
-## Cursor
+## Per-adapter output
 
-- `.cursor/rules/index.mdc` — agent identity + project context (`alwaysApply: true`)
-- `.cursor/rules/<rule>.mdc` — per-rule file with `globs` where relevant (e.g. `components`, `forms-validation`)
-- `.cursor/skills/<stage>/SKILL.md` — lifecycle stage invoked via `/think`, `/plan`, etc.
+### Cursor
 
-## Claude Code
+```
+.cursor/rules/index.mdc           # agent identity + context (alwaysApply: true)
+.cursor/rules/<rule>.mdc          # one file per rule, globs where relevant
+.cursor/skills/think/
+.cursor/skills/plan/
+.cursor/skills/build/
+.cursor/skills/review/
+.cursor/skills/test/
+.cursor/skills/ship/
+.cursor/skills/reflect/
+```
 
-- `.claude/rules/<rule>.md` — per-rule file (loaded on demand)
-- `.claude/commands/<stage>.md` — lifecycle stage invoked from the command palette
-- `CLAUDE.md` — slim pointer index listing all rules and lifecycle commands with `load-when` paths
+### Claude Code
 
-## VS Code Copilot
+```
+CLAUDE.md                         # slim pointer index — lists all rules and commands with load-when paths
+.claude/rules/<rule>.md           # one file per rule (loaded on demand)
+.claude/commands/think.md
+.claude/commands/plan.md
+.claude/commands/build.md
+.claude/commands/review.md
+.claude/commands/test.md
+.claude/commands/ship.md
+.claude/commands/reflect.md
+```
 
-`.github/copilot-instructions.md` — single merged file with agent instructions, all rules, and all lifecycle sections. Reference sections by name in Copilot chat.
+### VS Code Copilot
 
-## Windsurf
+```
+.github/copilot-instructions.md   # agent identity + all rules + all lifecycle stages merged
+```
 
-- `.windsurfrules` — agent + context (always-on)
-- `.windsurf/rules/<rule>.md` — per-rule files
-- `.windsurf/rules/lifecycle-<stage>.md` — per-stage lifecycle files
+### Windsurf
 
-## Antigravity
+```
+.windsurfrules                         # agent identity (slim, always-on)
+.windsurf/rules/<rule>.md              # one file per rule
+.windsurf/rules/lifecycle-think.md
+.windsurf/rules/lifecycle-plan.md
+.windsurf/rules/lifecycle-build.md
+.windsurf/rules/lifecycle-review.md
+.windsurf/rules/lifecycle-test.md
+.windsurf/rules/lifecycle-ship.md
+.windsurf/rules/lifecycle-reflect.md
+```
 
-`.agents/workflows/<stage>.md` — one workflow file per lifecycle stage (7 total).
+### Antigravity
+
+```
+.agents/workflows/think.md
+.agents/workflows/plan.md
+.agents/workflows/build.md
+.agents/workflows/review.md
+.agents/workflows/test.md
+.agents/workflows/ship.md
+.agents/workflows/reflect.md
+```
 
 **Next:** [Recommended workflow](/guide/6-workflow).

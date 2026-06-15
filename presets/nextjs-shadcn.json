@@ -21,6 +21,8 @@
   "ideTargets": [
     "cursor",
     "claude-code",
-    "vscode-copilot"
+    "vscode-copilot",
+    "antigravity",
+    "windsurf"
   ]
 }

@@ -31,22 +31,29 @@ describe('boxLine', () => {
 });
 
 describe('renderStartupBanner', () => {
-  it('includes title, version, description, and docs URL', () => {
+  it('includes title, version, description, and docs URL as plain text outside the box', () => {
+    const url = 'https://example.com/docs/';
     const out = renderStartupBanner({
       title: BANNER_TITLE,
       version: '1.2.0',
       description: ['Line one.', 'Line two.'],
-      docsUrl: 'https://example.com/docs/',
+      docsUrl: url,
     });
     expect(out).toContain(BANNER_TITLE);
     expect(out).toContain('v1.2.0');
     expect(out).toContain('Line one.');
     expect(out).toContain('Line two.');
-    expect(out).toContain('Docs: https://example.com/docs/');
-    expect(out.split('\n').every((l) => l.length === INNER_WIDTH + 2)).toBe(true);
+    const lines = out.split('\n');
+    // The docs URL line is outside the box — only the box lines have length INNER_WIDTH + 2
+    const boxLines = lines.slice(0, -1); // all but last
+    expect(boxLines.every((l) => l.length === INNER_WIDTH + 2)).toBe(true);
+    // Last line is plain text containing the full URL
+    const urlLine = lines[lines.length - 1];
+    expect(urlLine).toContain(url);
+    expect(urlLine).not.toContain('…');
   });
 
-  it('truncates long docs URL with ellipsis', () => {
+  it('emits long docs URL in full (never truncated)', () => {
     const longUrl = 'https://' + 'a'.repeat(INNER_WIDTH + 20) + '.example.com/';
     const out = renderStartupBanner({
       title: BANNER_TITLE,
@@ -54,8 +61,9 @@ describe('renderStartupBanner', () => {
       description: ['x', 'y'],
       docsUrl: longUrl,
     });
-    expect(out).toContain('…');
-    expect(out.split('\n').every((l) => l.length === INNER_WIDTH + 2)).toBe(true);
+    // URL appears outside box — no truncation regardless of length
+    expect(out).toContain(longUrl);
+    expect(out).not.toContain('…');
   });
 });
 

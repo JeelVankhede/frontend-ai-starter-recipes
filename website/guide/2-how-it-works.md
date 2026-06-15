@@ -6,14 +6,14 @@
 flowchart LR
   P[Prompts or preset] --> C[buildContext]
   C --> H[Handlebars]
-  H --> AI[".ai/*"]
-  AI --> AD[Adapters]
+  H --> AD[Adapters]
+  AD --> IDE[IDE-native files]
 ```
 
 1. **Answers** — UI framework drives filtered choices (e.g. Pinia only for Vue).  
 2. **Context** — Boolean flags and commands (`buildCommand`, `testCommand`, `e2eCommand`, directory hints).  
-3. **Templates** — `templates/**/*.hbs` render into `.ai/`.  
-4. **Adapters** — Read `.ai/` and emit IDE-specific files (e.g. Cursor `.mdc` with globs).
+3. **Templates** — `templates/**/*.hbs` render Markdown in memory — nothing intermediate is written to disk.  
+4. **Adapters** — Each selected IDE adapter writes its native files directly from that in-memory context: Cursor `.mdc` rules, `CLAUDE.md`, Copilot instructions, Windsurf rules, or Antigravity workflows.
 
 ## Example conditional
 

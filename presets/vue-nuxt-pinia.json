@@ -19,6 +19,9 @@
   "cicd": "github-actions",
   "ideTargets": [
     "cursor",
+    "claude-code",
+    "vscode-copilot",
+    "antigravity",
     "windsurf"
   ]
 }
