@@ -42,6 +42,8 @@ jobs:
           npm run docs:build
           mkdir -p website/.vitepress/dist/v1.1
           cp -r /tmp/v1.1-docs/. website/.vitepress/dist/v1.1/
+        env:
+          VITE_MIXPANEL_TOKEN: ${{ secrets.VITE_MIXPANEL_TOKEN }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: website/.vitepress/dist

@@ -9,4 +9,7 @@ export default defineConfig({
   bundle: true,
   minify: false,
   sourcemap: true,
+  env: {
+    MIXPANEL_TOKEN: process.env.MIXPANEL_TOKEN ?? '',
+  },
 });
