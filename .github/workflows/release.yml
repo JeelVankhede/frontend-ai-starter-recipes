@@ -30,6 +30,8 @@ jobs:
     permissions:
       id-token: write
       contents: write
+    env:
+      MIXPANEL_TOKEN: ${{ secrets.MIXPANEL_TOKEN }}
     steps:
       - name: Checkout main
         uses: actions/checkout@v4
@@ -50,8 +52,6 @@ jobs:
           npm run build
           npm run check:dist
           npm test
-        env:
-          MIXPANEL_TOKEN: ${{ secrets.MIXPANEL_TOKEN }}
 
       - name: Bump version
         id: version
