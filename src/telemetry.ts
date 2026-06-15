@@ -8,9 +8,17 @@ export function isTrackingEnabled(): boolean {
   return config.telemetry !== false;
 }
 
-export function track(event: string, props: Record<string, unknown>): void {
-  const token = process.env.MIXPANEL_TOKEN ?? '';
-  if (!isTrackingEnabled()) return;
-  const client = Mixpanel.init(token, { keep_alive: false });
-  client.track(event, { source: 'cli', ...props });
+/** Fires a Mixpanel event and resolves when the HTTP request completes or fails.
+ *  Never rejects — all errors are swallowed so telemetry never affects the user. */
+export function track(event: string, props: Record<string, unknown>): Promise<void> {
+  return new Promise((resolve) => {
+    try {
+      const token = process.env.MIXPANEL_TOKEN ?? '';
+      if (!isTrackingEnabled()) { resolve(); return; }
+      const client = Mixpanel.init(token, { keep_alive: false });
+      client.track(event, { source: 'cli', ...props }, () => resolve());
+    } catch {
+      resolve();
+    }
+  });
 }

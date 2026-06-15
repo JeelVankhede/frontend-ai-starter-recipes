@@ -267,7 +267,7 @@ async function run() {
     );
 
     if (trackingAllowed) {
-      track('cli_run', {
+      await track('cli_run', {
         preset: options.preset ?? null,
         adapters: context.ideTargets,
         adapter_count: context.ideTargets.length,
@@ -284,7 +284,7 @@ async function run() {
       process.exit(0);
     }
     if (trackingAllowed) {
-      track('cli_run', {
+      await track('cli_run', {
         preset: options.preset ?? null,
         adapters: [],
         adapter_count: 0,

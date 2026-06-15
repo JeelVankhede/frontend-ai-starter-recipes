@@ -52,27 +52,36 @@ describe('isTrackingEnabled', () => {
 });
 
 describe('track', () => {
-  it('calls Mixpanel.init and client.track when tracking enabled', () => {
+  it('calls Mixpanel.init and client.track when tracking enabled', async () => {
     vi.stubEnv('MIXPANEL_TOKEN', 'test-token');
     mockLoadConfig.mockReturnValue({ telemetry: true });
-    const mockClient = { track: vi.fn() };
+    const mockClient = { track: vi.fn((_e: string, _p: unknown, cb: () => void) => cb()) };
     mockInit.mockReturnValue(mockClient);
 
-    track('cli_run', { preset: 'react-vite-tailwind' });
+    await track('cli_run', { preset: 'react-vite-tailwind' });
 
     expect(mockInit).toHaveBeenCalledWith('test-token', { keep_alive: false });
-    expect(mockClient.track).toHaveBeenCalledWith('cli_run', {
-      source: 'cli',
-      preset: 'react-vite-tailwind',
-    });
+    expect(mockClient.track).toHaveBeenCalledWith(
+      'cli_run',
+      { source: 'cli', preset: 'react-vite-tailwind' },
+      expect.any(Function),
+    );
   });
 
-  it('does not call Mixpanel.init when tracking disabled', () => {
+  it('does not call Mixpanel.init when tracking disabled', async () => {
     vi.stubEnv('MIXPANEL_TOKEN', '');
     mockLoadConfig.mockReturnValue({ telemetry: true });
 
-    track('cli_run', { preset: 'react-vite-tailwind' });
+    await track('cli_run', { preset: 'react-vite-tailwind' });
 
     expect(mockInit).not.toHaveBeenCalled();
+  });
+
+  it('resolves without throwing when Mixpanel.init throws', async () => {
+    vi.stubEnv('MIXPANEL_TOKEN', 'test-token');
+    mockLoadConfig.mockReturnValue({ telemetry: true });
+    mockInit.mockImplementation(() => { throw new Error('network'); });
+
+    await expect(track('cli_run', {})).resolves.toBeUndefined();
   });
 });
