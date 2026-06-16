@@ -33,5 +33,6 @@ jobs:
           npm install "$PACK"
           npx fare --help
           npx fare --preset react-vite-tailwind --output ./out
-          test -f out/.ai/AGENT.md
-          test -f out/.ai/lifecycle/think.md
+          test -f out/CLAUDE.md
+          test -f out/.claude/commands/think.md
+          test -f out/.cursor/rules/index.mdc
