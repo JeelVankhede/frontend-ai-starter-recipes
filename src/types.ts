@@ -49,7 +49,6 @@ export interface UserAnswers {
   monitoring: string[];
   cicd: 'github-actions' | 'gitlab-ci' | 'vercel' | 'netlify' | 'none';
   ideTargets: string[];
-  skills: string[];
 }
 
 /** {@link UserAnswers} plus derived strings and booleans for templates. */
@@ -121,3 +120,33 @@ export interface TemplateContext extends UserAnswers {
   pagesDir: string;
   storeDir: string;
 }
+
+/**
+ * In-memory render output that adapters consume. Replaces the v1.1 `.ai/` intermediate tree.
+ * `rules` keys are rule basenames (e.g. `architecture`, `state-and-data-fetching`).
+ * `lifecycle` keys are stage names (e.g. `think`, `plan`, ..., `reflect`).
+ */
+export interface RenderedContext {
+  agent: string;
+  rules: Record<string, string>;
+  lifecycle: Record<string, string>;
+}
+
+/** Outcome of a single `FileWriter.write()` call. */
+export type WriteStatus = 'created' | 'backed-up' | 'skipped' | 'overwritten';
+
+export interface WriteResult {
+  path: string;
+  status: WriteStatus;
+}
+
+/**
+ * Write mode controlling `FileWriter.write()` behavior when a target path already exists.
+ * - `backup`: copy existing file to `<path><suffix>`, then write new content.
+ * - `skip-existing`: leave existing file untouched.
+ * - `overwrite`: write unconditionally.
+ *
+ * The default is `backup` so re-running the CLI on an existing consumer project
+ * never silently destroys local edits.
+ */
+export type WriteMode = 'backup' | 'skip-existing' | 'overwrite';

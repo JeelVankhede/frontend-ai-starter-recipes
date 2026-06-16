@@ -6,7 +6,7 @@ description: Understand the frontend goal, constraints, and existing code before
 
 ## Stage Goal
 
-Understand the user goal, selected frontend stack, constraints, and existing code before proposing changes.
+Understand the user goal, selected frontend stack, constraints, and existing code before proposing any design or implementation work. Name affected routes, components, state boundaries, and accessibility concerns before recommending changes.
 
 ## Inputs Needed
 
@@ -14,31 +14,34 @@ Understand the user goal, selected frontend stack, constraints, and existing cod
 - Project stack: {{uiFramework}}{{#if hasMetaFramework}} + {{metaFramework}}{{/if}}, {{language}}, {{styling}}.
 - Existing routes/pages in `{{pagesDir}}`.
 - Existing components in `{{componentDir}}`.
-- State, data fetching, forms, tests, styling, and accessibility conventions.
+- State ownership, data-fetching lifecycle, forms and validation, styling tokens, accessibility conventions, and test setup already in the repo.
+- Stage-specific context (constraints, unknowns, approvals) carried in from prior stages.
 
 ## AI Behavior Expected
 
 - Restate the goal in concrete frontend terms.
-- Inspect relevant files before asking questions the repo can answer.
-- Identify affected routes, components, state/data boundaries, forms, and tests.
-- Surface initial risks around accessibility, responsive behavior, performance, and adapter output.
+- Inspect relevant files before asking questions the repo can already answer.
+- Identify affected routes, components, hooks/composables, state and data boundaries, forms, styling tokens, and tests.
+- Surface constraints, unknowns, and risky assumptions early — especially around accessibility (a11y), responsive behavior, performance, and adapter output.
 - Ask only for decisions that cannot be discovered safely from the repo.
 
 ## AI Behavior Forbidden
 
+- Combining Think and Plan when an approval checkpoint is required.
 - Jumping straight to implementation.
-- Replacing established component, styling, routing, or state patterns without evidence.
-- Expanding scope beyond the requested user flow.
-- Treating generic advice as sufficient when stack-specific guidance exists in `.ai/rules/`.
+- Replacing established component, styling, routing, or state patterns without a named reason.
+- Generic lifecycle guidance that does not name specific frontend concerns (routing, components, state, data, styling, a11y, performance).
+- Treating generic advice as sufficient when stack-specific guidance exists in your project's rule documentation.
 
 ## Output Expected
 
-- Restated goal.
+- Restated goal in concrete frontend terms.
+- Inspected files and existing conventions.
 - Known constraints.
-- Missing context.
-- Initial risk areas.
+- Missing context and open questions for the user.
+- Initial risk areas (a11y, responsive, performance, adapter output).
 - Recommended next step.
 
 ## Quality Bar
 
-Think is complete when the AI can name the likely frontend files, conventions, risks, and unresolved decisions before planning.
+Think is complete when the AI can name the likely frontend files, conventions, risks, and unresolved decisions before any planning begins.

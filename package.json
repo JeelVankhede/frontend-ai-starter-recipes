@@ -1,7 +1,7 @@
 {
   "name": "frontend-ai-starter-recipes",
   "version": "1.1.0",
-  "description": "Interactive CLI for generating AI agent instructions and workflows for frontend web projects",
+  "description": "Fare — Frontend Ai starter REcipes — interactive CLI for generating AI agent rules, lifecycle docs, and workflow starters for frontend projects.",
   "type": "module",
   "main": "dist/cli.js",
   "bin": {
@@ -64,7 +64,8 @@
     "@inquirer/prompts": "^8.3.2",
     "chalk": "^5.6.2",
     "commander": "^14.0.3",
-    "handlebars": "^4.7.8"
+    "handlebars": "^4.7.8",
+    "mixpanel": "^0.22.0"
   },
   "devDependencies": {
     "@types/inquirer": "^9.0.9",

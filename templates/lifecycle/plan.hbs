@@ -6,11 +6,11 @@ description: Produce a concrete frontend implementation plan before coding
 
 ## Stage Goal
 
-Produce a scoped frontend implementation plan before editing files.
+Produce a scoped frontend implementation plan before editing files. List every file that will change, the state or data model delta, test cases to add or update, and risks. Do not combine Plan and Build.
 
 ## Inputs Needed
 
-- Output from Think.
+- Output from Think (restated goal, inspected areas, constraints, open questions).
 - Existing routes/pages, components, state/data patterns, styling approach, and tests.
 - Acceptance criteria and out-of-scope items.
 - Compatibility, accessibility, performance, and release constraints.
@@ -18,10 +18,11 @@ Produce a scoped frontend implementation plan before editing files.
 ## AI Behavior Expected
 
 - Name affected routes, components, hooks/composables/services, styles, and tests.
-- Define state ownership and server-state/data-fetching boundaries.
-- Identify accessibility, responsive, loading, error, empty, and performance concerns.
+- Define state ownership and server-state/data-fetching boundaries explicitly.
+- Identify accessibility, responsive, loading, error, empty, and performance concerns per affected surface.
 - Choose the smallest implementation path that matches existing conventions.
-- Define validation commands and manual checks.
+- Define validation commands and manual checks proportional to risk.
+- Call out items that require user approval before Build (new dependencies, contract changes, behavior changes, output path changes).
 
 ## AI Behavior Forbidden
 
@@ -29,16 +30,18 @@ Produce a scoped frontend implementation plan before editing files.
 - Introducing new libraries without explicit approval.
 - Moving state globally before it is shared, persisted, or required by the workflow.
 - Hiding unresolved user-facing behavior decisions.
+- Combining Plan and Build in a single step when approval is needed.
 
 ## Output Expected
 
 - Proposed approach.
-- File impact map.
-- Scope boundaries.
+- File impact map (files to change, files to add, files to delete).
+- State / data model delta.
+- Scope boundaries (in and out).
 - Risks and tradeoffs.
-- Test strategy.
+- Test strategy (unit, component, integration, manual).
 - Open questions, if any.
 
 ## Quality Bar
 
-Plan is complete when another engineer could implement the frontend change without making major product or architecture decisions.
+Plan is complete when another engineer could implement the frontend change without making major product, accessibility, or architecture decisions.

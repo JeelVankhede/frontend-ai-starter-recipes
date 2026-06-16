@@ -4,42 +4,58 @@
  * @module cli
  */
 
-import { Command } from 'commander';
+import { Command, Option } from 'commander';
 import chalk from 'chalk';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
 import { expandPath } from './path-utils.js';
 import { askQuestions } from './prompts.js';
 import { buildContext } from './context-builder.js';
 import { TemplateEngine } from './engine.js';
 import { FileWriter } from './writer.js';
 import fs from 'fs/promises';
-import { input, confirm } from '@inquirer/prompts';
+import { input, confirm, select } from '@inquirer/prompts';
 
 import { generateCursor } from './adapters/cursor.js';
 import { generateClaudeCode } from './adapters/claude-code.js';
 import { generateVsCodeCopilot } from './adapters/vscode-copilot.js';
 import { generateAntigravity } from './adapters/antigravity.js';
 import { generateWindsurf } from './adapters/windsurf.js';
+import { removeFrontmatter } from './adapters/helpers.js';
+import type { RenderedContext, TemplateContext, WriteMode, WriteResult } from './types.js';
+import { BANNER_TITLE, renderStartupBanner, renderGenerationSummary, ADAPTER_NAMES } from './banner.js';
+import { resolveTrackingConsent } from './config.js';
+import { track } from './telemetry.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const packageRootDir = path.resolve(__dirname, '..');
 
-const SKILL_FILENAME = 'SKILL.md' as const;
+const require = createRequire(import.meta.url);
+const pkg = require('../package.json') as { version: string; homepage: string };
+
+const FARE_DESCRIPTION: [string, string] = [
+  'Generate AI rules, lifecycle docs, and adapters for',
+  'your frontend project.',
+];
+
+function buildStackKey(ctx: TemplateContext): string {
+  const parts: string[] = [ctx.uiFramework];
+  if (ctx.hasMetaFramework && ctx.metaFramework !== 'none') parts.push(ctx.metaFramework);
+  if (ctx.hasTailwind) parts.push('tailwind');
+  return parts.join('-');
+}
 
 const RULE_FILES = [
   'architecture',
-  'component-patterns',
-  'styling',
+  'components',
+  'styling-accessibility',
   'routing',
-  'state-management',
-  'data-fetching',
+  'state-and-data-fetching',
   'forms-validation',
-  'performance',
-  'accessibility',
+  'performance-and-testing',
   'seo-meta',
-  'testing',
   'errors-logging',
   'security',
   'environment',
@@ -56,13 +72,30 @@ program
   .description('Generate customized AI agent instructions for your frontend project')
   .option('-o, --output <dir>', 'Output directory (skip prompt)')
   .option('-p, --preset <name>', 'Use a preset configuration')
+  .addOption(
+    new Option('--write-mode <mode>', 'How to handle existing files on re-run')
+      .choices(['backup', 'skip-existing', 'overwrite'])
+      .default('backup'),
+  )
   .parse(process.argv);
 
 async function run() {
   const options = program.opts();
 
-  console.log(chalk.bold.cyan('\n🎨 Frontend AI Starter Recipes'));
-  console.log(chalk.dim("Let's customize your AI agent instructions.\n"));
+  console.log();
+  console.log(
+    chalk.bold.cyan(
+      renderStartupBanner({
+        title: BANNER_TITLE,
+        version: pkg.version,
+        description: FARE_DESCRIPTION,
+        docsUrl: pkg.homepage,
+      }),
+    ),
+  );
+  console.log(chalk.dim("\nLet's customize your AI agent instructions.\n"));
+
+  const trackingAllowed = await resolveTrackingConsent();
 
   try {
     let outputDir = '';
@@ -124,7 +157,7 @@ async function run() {
     let answers;
 
     if (options.preset) {
-      console.log(chalk.cyan(`\n📦 Loading preset: ${options.preset}...`));
+      console.log(chalk.bold.cyan(`\n🧩  Loading preset: ${options.preset}`));
       const presetPath = path.join(packageRootDir, 'presets', `${options.preset}.json`);
       try {
         const presetData = await fs.readFile(presetPath, 'utf-8');
@@ -141,96 +174,126 @@ async function run() {
       answers = await askQuestions();
     }
 
+    console.log(chalk.bold.cyan('\n📋  Building template context…'));
     const context = buildContext(answers);
 
-    console.log(chalk.cyan('\n⚙️  Generating Canonical .ai/ Files...'));
+    let writeMode = options.writeMode as WriteMode;
+    if (program.getOptionValueSource('writeMode') !== 'cli' && process.stdin.isTTY) {
+      writeMode = (await select({
+        message: 'File write mode:',
+        choices: [
+          { name: 'Backup existing files and write new (safe, default)', value: 'backup' },
+          { name: 'Skip if file already exists', value: 'skip-existing' },
+          { name: 'Overwrite without backup', value: 'overwrite' },
+        ],
+        default: 'backup',
+      })) as WriteMode;
+    }
 
     const engine = new TemplateEngine(packageRootDir);
     await engine.initialize();
-    const writer = new FileWriter(outputDir);
+    const writer = new FileWriter(outputDir, writeMode, '.fare-backup');
 
-    await writer.write('.ai/AGENT.md', await engine.render('agent.hbs', context));
+    const agentBase = await engine.render('agent.hbs', context);
+    const domainMap = await engine.render('context/domain-map.hbs', context);
+    const techStack = await engine.render('context/tech-stack.hbs', context);
 
-    for (const stage of LIFECYCLE_FILES) {
-      await writer.write(`.ai/lifecycle/${stage}.md`, await engine.render(`lifecycle/${stage}.hbs`, context));
-    }
+    const agent = [
+      agentBase.trimEnd(),
+      '',
+      '---',
+      '',
+      '## Project Context',
+      '',
+      '### Domain Map',
+      '',
+      removeFrontmatter(domainMap).trim(),
+      '',
+      '### Tech Stack',
+      '',
+      removeFrontmatter(techStack).trim(),
+      '',
+    ].join('\n');
 
+    console.log(chalk.bold.cyan(`\n🔨  Rendering rules (${RULE_FILES.length})…`));
+    const rules: Record<string, string> = {};
     for (const rule of RULE_FILES) {
-      await writer.write(`.ai/rules/${rule}.md`, await engine.render(`rules/${rule}.hbs`, context));
+      rules[rule] = await engine.render(`rules/${rule}.hbs`, context);
     }
 
-    if (context.skills.includes('plan-review')) {
-      await writer.write(
-        `.ai/skills/plan-review/${SKILL_FILENAME}`,
-        await engine.render('skills/plan-review.hbs', context),
-      );
-    }
-    if (context.skills.includes('code-review')) {
-      await writer.write(
-        `.ai/skills/code-review/${SKILL_FILENAME}`,
-        await engine.render('skills/code-review-skill.hbs', context),
-      );
-      await writer.write(
-        '.ai/skills/code-review/checklist.md',
-        await engine.render('skills/code-review-checklist.hbs', context),
-      );
-    }
-    if (context.skills.includes('qa')) {
-      await writer.write(`.ai/skills/qa/${SKILL_FILENAME}`, await engine.render('skills/qa.hbs', context));
-    }
-    if (context.skills.includes('ship')) {
-      await writer.write(`.ai/skills/ship/${SKILL_FILENAME}`, await engine.render('skills/ship.hbs', context));
-    }
-    if (context.skills.includes('document-release')) {
-      await writer.write(
-        `.ai/skills/document-release/${SKILL_FILENAME}`,
-        await engine.render('skills/document-release.hbs', context),
-      );
-    }
-    if (context.skills.includes('retro')) {
-      await writer.write(`.ai/skills/retro/${SKILL_FILENAME}`, await engine.render('skills/retro.hbs', context));
-    }
-    if (context.skills.includes('performance-audit')) {
-      await writer.write(
-        `.ai/skills/performance-audit/${SKILL_FILENAME}`,
-        await engine.render('skills/performance-audit.hbs', context),
-      );
-    }
-    if (context.skills.includes('accessibility-audit')) {
-      await writer.write(
-        `.ai/skills/accessibility-audit/${SKILL_FILENAME}`,
-        await engine.render('skills/accessibility-audit.hbs', context),
-      );
-    }
-    if (context.skills.includes('component-audit')) {
-      await writer.write(
-        `.ai/skills/component-audit/${SKILL_FILENAME}`,
-        await engine.render('skills/component-audit.hbs', context),
-      );
-    }
-    if (context.skills.includes('dependency-audit')) {
-      await writer.write(
-        `.ai/skills/dependency-audit/${SKILL_FILENAME}`,
-        await engine.render('skills/dependency-audit.hbs', context),
-      );
+    console.log(chalk.bold.cyan(`\n🔄  Rendering lifecycle stages (${LIFECYCLE_FILES.length})…`));
+    const lifecycle: Record<string, string> = {};
+    for (const stage of LIFECYCLE_FILES) {
+      lifecycle[stage] = await engine.render(`lifecycle/${stage}.hbs`, context);
     }
 
-    await writer.write('.ai/context/domain-map.md', await engine.render('context/domain-map.hbs', context));
-    await writer.write('.ai/context/tech-stack.md', await engine.render('context/tech-stack.hbs', context));
-    await writer.write('.ai/tracking/efficiency.md', await engine.render('tracking/efficiency.hbs', context));
+    const rendered: RenderedContext = { agent, rules, lifecycle };
 
-    console.log(chalk.cyan('\n⚙️  Running IDE Adapters...'));
-    if (context.ideTargets.includes('cursor')) await generateCursor(outputDir, writer);
-    if (context.ideTargets.includes('claude-code')) await generateClaudeCode(outputDir, writer);
-    if (context.ideTargets.includes('vscode-copilot')) await generateVsCodeCopilot(outputDir, writer);
-    if (context.ideTargets.includes('antigravity')) await generateAntigravity(outputDir, writer);
-    if (context.ideTargets.includes('windsurf')) await generateWindsurf(outputDir, writer);
+    const byAdapter: Record<string, WriteResult[]> = {};
+    for (const adapter of context.ideTargets) {
+      console.log(chalk.bold.cyan(`\n🖥️   Writing ${ADAPTER_NAMES[adapter] ?? adapter} adapter…`));
+      if (adapter === 'cursor') byAdapter[adapter] = await generateCursor(writer, rendered, context);
+      else if (adapter === 'claude-code')
+        byAdapter[adapter] = await generateClaudeCode(writer, rendered, context);
+      else if (adapter === 'vscode-copilot')
+        byAdapter[adapter] = await generateVsCodeCopilot(writer, rendered, context);
+      else if (adapter === 'antigravity')
+        byAdapter[adapter] = await generateAntigravity(writer, rendered, context);
+      else if (adapter === 'windsurf')
+        byAdapter[adapter] = await generateWindsurf(writer, rendered, context);
+    }
 
-    console.log(chalk.bold.green(`\n✨ Success! Output saved to: ${outputDir}`));
+    const totalFiles = Object.values(byAdapter).reduce((n, r) => n + r.length, 0);
+    if (totalFiles === 0) {
+      console.log(chalk.yellow('\nNo adapters selected — nothing to write.'));
+      return;
+    }
+
+    const projectLabel = `${context.projectName || path.basename(outputDir)}  (${
+      options.preset ? options.preset : buildStackKey(context)
+    })`;
+
+    console.log();
+    console.log(
+      chalk.bold.cyan(
+        renderGenerationSummary({
+          outputDir,
+          projectLabel,
+          byAdapter,
+          ideTargets: context.ideTargets,
+          docsUrl: pkg.homepage,
+        }),
+      ),
+    );
+
+    if (trackingAllowed) {
+      await track('cli_run', {
+        preset: options.preset ?? null,
+        adapters: context.ideTargets,
+        adapter_count: context.ideTargets.length,
+        write_mode: writeMode,
+        success: true,
+        node_version: process.version,
+        os_platform: process.platform,
+        fare_version: pkg.version,
+      });
+    }
   } catch (err) {
     if (err instanceof Error && err.name === 'ExitPromptError') {
       console.log(chalk.yellow('\nPrompt cancelled by user.'));
       process.exit(0);
+    }
+    if (trackingAllowed) {
+      await track('cli_run', {
+        preset: options.preset ?? null,
+        adapters: [],
+        adapter_count: 0,
+        write_mode: options.writeMode ?? 'backup',
+        success: false,
+        node_version: process.version,
+        os_platform: process.platform,
+        fare_version: pkg.version,
+      });
     }
     console.error(chalk.red('\n❌ Error generating templates:'), err);
     process.exit(1);

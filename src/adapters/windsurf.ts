@@ -1,40 +1,38 @@
 /**
- * Writes a single `.windsurfrules` file from merged `.ai` agent + rules.
+ * Windsurf adapter — renders slim `.windsurfrules` (AGENT only) + per-rule
+ * `.windsurf/rules/<rule>.md` + per-stage `.windsurf/rules/lifecycle-<stage>.md`
+ * from in-memory `RenderedContext`.
  * @module adapters/windsurf
  */
-import fs from 'fs/promises';
-import path from 'path';
-import chalk from 'chalk';
 import type { FileWriter } from '../writer.js';
-import { readLifecycleContent, removeFrontmatter } from './lifecycle.js';
+import type { RenderedContext, TemplateContext, WriteResult } from '../types.js';
+import { removeFrontmatter } from './helpers.js';
+import { sleep } from '../sleep.js';
 
-export async function generateWindsurf(outputDir: string, writer: FileWriter) {
-  const aiDir = path.join(outputDir, '.ai');
+export async function generateWindsurf(
+  writer: FileWriter,
+  rendered: RenderedContext,
+  _context: TemplateContext,
+): Promise<WriteResult[]> {
+  const results: WriteResult[] = [];
 
-  try {
-    let mergedContent = '';
+  // 1. Slim AGENT-only root file
+  const agentBody = removeFrontmatter(rendered.agent);
+  results.push(await writer.write('.windsurfrules', agentBody));
+  await sleep(300);
 
-    const agentContent = await fs.readFile(path.join(aiDir, 'AGENT.md'), 'utf-8');
-    mergedContent += removeFrontmatter(agentContent) + '\n\n';
-
-    mergedContent += await readLifecycleContent(aiDir);
-
-    const rulesDir = path.join(aiDir, 'rules');
-    try {
-      const ruleFiles = await fs.readdir(rulesDir);
-      for (const file of ruleFiles) {
-        if (!file.endsWith('.md')) continue;
-        const content = await fs.readFile(path.join(rulesDir, file), 'utf-8');
-        mergedContent += removeFrontmatter(content) + '\n\n';
-      }
-    } catch {
-      /* no rules */
-    }
-
-    await writer.write('.windsurfrules', mergedContent);
-
-    console.log(chalk.dim('  ↳ Generated Windsurf configuration'));
-  } catch (err) {
-    console.error(chalk.red('Failed to generate Windsurf config:'), err);
+  // 2. Per-rule .windsurf/rules/<ruleName>.md (strip WP-D frontmatter)
+  for (const [ruleName, content] of Object.entries(rendered.rules)) {
+    const body = removeFrontmatter(content);
+    results.push(await writer.write(`.windsurf/rules/${ruleName}.md`, body));
+    await sleep(300);
   }
+
+  // 3. Per-lifecycle-stage .windsurf/rules/lifecycle-<stageName>.md (as-is)
+  for (const [stageName, content] of Object.entries(rendered.lifecycle)) {
+    results.push(await writer.write(`.windsurf/rules/lifecycle-${stageName}.md`, content));
+    await sleep(300);
+  }
+
+  return results;
 }

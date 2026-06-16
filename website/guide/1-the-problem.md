@@ -25,10 +25,10 @@ That friction is **missing shared context**. General models do not ship with *yo
 
 | Piece | Role |
 |-------|------|
-| `.ai/AGENT.md` | Core behavior for this frontend repo |
-| `.ai/rules/*.md` | Topic standards (16 files) |
-| `.ai/skills/*/` | Named workflows |
-| `.ai/context/` | Domain map + tech stack |
-| IDE adapters | Cursor, Claude, Copilot, Antigravity, Windsurf |
+| **Agent file** | Core identity, quality gates, and principles for your repo |
+| **Rules** (13 files) | Always-on standards — architecture, components, styling, state, routing, testing, security, and more |
+| **Lifecycle stages** | Seven named workflows — Think, Plan, Build, Review, Test, Ship, Reflect |
+| **Context** | Domain map and approved tech stack you fill in once |
+| **IDE format** | Delivered as Cursor `.mdc` rules, `CLAUDE.md`, Copilot instructions, Windsurf rules, or Antigravity workflows |
 
 **Next:** [How it works](/guide/2-how-it-works).

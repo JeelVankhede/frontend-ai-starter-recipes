@@ -15,16 +15,11 @@
   "e2eFramework": "playwright",
   "monitoring": [],
   "cicd": "netlify",
-  "ideTargets": ["cursor", "vscode-copilot"],
-  "skills": [
-    "plan-review",
-    "code-review",
-    "qa",
-    "ship",
-    "retro",
-    "performance-audit",
-    "accessibility-audit",
-    "component-audit",
-    "dependency-audit"
+  "ideTargets": [
+    "cursor",
+    "claude-code",
+    "vscode-copilot",
+    "antigravity",
+    "windsurf"
   ]
 }

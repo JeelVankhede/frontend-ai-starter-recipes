@@ -3,11 +3,22 @@ import { withMermaid } from 'vitepress-plugin-mermaid';
 
 export default withMermaid(
   defineConfig({
-    title: 'FARE Docs',
+    title: 'Fare',
     description:
       'Documentation for frontend-ai-starter-recipes — AI agent rules, skills, and workflows for frontend projects.',
     base: '/frontend-ai-starter-recipes/',
     outDir: '.vitepress/dist',
+
+    head: [
+      [
+        'script',
+        {},
+        `(function(c,a){window.mixpanel=a;var b=c.createElement("script");b.type="text/javascript";b.async=!0;b.src="https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";var d=c.getElementsByTagName("script")[0];d.parentNode.insertBefore(b,d);a._i=[];a.init=function(b,c,f){function d(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]);a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}var g=a;"undefined"!==typeof f?g=a[f]=[]:f="mixpanel";g.people=g.people||[];var h="disable track track_pageview track_links track_forms register register_once unregister identify name_tag set_config".split(" ");for(var e=0;e<h.length;e++)d(g,h[e]);a._i.push([b,c,f])};a.__SV=1.1})(document,window.mixpanel||[]);
+  if ("${process.env.VITE_MIXPANEL_TOKEN ?? ''}") {
+    mixpanel.init("${process.env.VITE_MIXPANEL_TOKEN ?? ''}");
+  }`,
+      ],
+    ],
 
     themeConfig: {
       logo: '/logo.svg',
@@ -21,8 +32,15 @@ export default withMermaid(
           link: 'https://github.com/JeelVankhede/frontend-ai-starter-recipes/wiki',
         },
         {
-          text: 'GitHub',
-          link: 'https://github.com/JeelVankhede/frontend-ai-starter-recipes',
+          text: 'v1.2',
+          items: [
+            { text: 'v1.2 (current)', link: '/', target: '_self' },
+            {
+              text: 'v1.1',
+              link: 'https://jeelvankhede.github.io/frontend-ai-starter-recipes/v1.1/',
+              target: '_self',
+            },
+          ],
         },
       ],
 
@@ -37,6 +55,13 @@ export default withMermaid(
               { text: 'Usage', link: '/guide/4-usage' },
               { text: 'Understanding the output', link: '/guide/5-the-output' },
               { text: 'Recommended workflow', link: '/guide/6-workflow' },
+              { text: 'Lifecycle in practice', link: '/guide/7-lifecycle-demo' },
+            ],
+          },
+          {
+            text: 'Migration',
+            items: [
+              { text: 'Upgrading to v1.2', link: '/guide/8-migration-v1.2' },
             ],
           },
         ],

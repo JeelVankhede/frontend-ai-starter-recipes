@@ -1,0 +1,123 @@
+---
+description: Guide frontend state and data fetching choices.
+---
+
+# State And Data Fetching
+
+Guide frontend state and data fetching choices.
+
+Use this rule during the Think, Plan, Build, Review, and Test stages.
+
+Before adding state, decide whether it is local UI state, shared client state, server state, URL state, or persisted state. Before changing data access, identify the owning API client, cache strategy, loading/error/empty states, and mutation invalidation behavior.
+
+## AI Responsibilities
+
+- Keep state local unless it is shared, persisted, or cross-route.
+- Follow existing data fetching conventions.
+- Model loading, empty, error, and success states.
+- Avoid duplicated request logic.
+- Define retry and invalidation behavior when relevant.
+
+## AI Must Avoid
+
+- Adding global state for isolated UI behavior.
+- Swallowing request failures.
+- Updating cached data without considering invalidation.
+
+## Stack-Specific Guidance
+
+For client-side fetching libraries, prefer existing query keys, cache invalidation patterns, and error display conventions.
+
+### State management
+
+{{#if (eq stateManagement "none")}}
+- Prefer **local component state** and framework primitives (Context sparingly).
+- Avoid prop drilling more than 2–3 levels — lift state or use composition.
+{{/if}}
+
+{{#if hasRedux}}
+- Use **Redux Toolkit** slices; colocate slice + selectors; avoid large monolithic stores.
+- Prefer RTK Query only if selected as data layer; otherwise keep queries separate.
+{{/if}}
+{{#if hasZustand}}
+- One store per domain; export selectors; avoid storing non-serializable objects unless intentional.
+{{/if}}
+{{#if hasJotai}}
+- Prefer atoms per concern; derive with `atom` + read-only dependencies.
+{{/if}}
+{{#if hasRecoil}}
+- Avoid cross-atom cycles; document atom families for lists.
+{{/if}}
+{{#if hasPinia}}
+- Setup stores with `defineStore`; prefer composition-style stores for complex domains.
+{{/if}}
+{{#if hasNgRx}}
+- Actions/reducers/effects separated; selectors for derived data; keep facades thin.
+{{/if}}
+{{#if hasSvelteStores}}
+- Use `writable` + `derived`; unsubscribe in `onDestroy` when subscribing manually.
+{{/if}}
+{{#if hasMobX}}
+- Prefer `observer` boundaries; keep actions explicit; avoid mutating observables outside actions.
+{{/if}}
+
+#### SSR / hydration
+
+{{#if hasMetaFramework}}
+- Ensure server and client render **consistent initial state**; avoid reading `window` during first paint on server bundles.
+{{/if}}
+
+#### Ownership rules
+
+- Keep state local when only one component subtree needs it.
+- Lift state only to the nearest common owner.
+- Use URL/search params for shareable navigation or filter state.
+- Use server-state tooling for cache, invalidation, and async data; do not duplicate it in client stores.
+- Persist state only when the product behavior requires it.
+
+### Data fetching
+
+{{#if (eq dataFetching "none")}}
+- Centralize HTTP in `src/api/` (or `src/services/`); use typed responses and narrow error shapes.
+- Surface **loading / error / empty** states consistently in UI components.
+{{/if}}
+
+{{#if hasTanstackQuery}}
+- **Query keys** are part of your API: colocate factory functions (`queryKeys.user(id)`).
+- Set sensible `staleTime`; invalidate on mutations; prefer `prefetchQuery` for perceived performance.
+{{/if}}
+{{#if hasSWR}}
+- Keys as tuples; align fetcher signatures; use `mutate` for optimistic updates when appropriate.
+{{/if}}
+{{#if hasApollo}}
+- Normalize with cache policies documented per feature; avoid `any` in generated types.
+{{/if}}
+{{#if hasRtkQuery}}
+- Tag types for invalidation; keep endpoints focused; generated hooks only in components that need them.
+{{/if}}
+{{#if hasTrpc}}
+- Use inferred types end-to-end; validate inputs on the server; handle `TRPCClientError` in UI.
+{{/if}}
+
+#### Pagination
+
+- Prefer **cursor-based** APIs when available; show loading rows or skeletons, not spinners only.
+
+#### Auth headers
+
+- Attach tokens in **one** place (interceptor / link / fetch wrapper), not per call site.
+
+#### UI state contract
+
+- Every async view needs loading, error, empty, and success states.
+- Mutations should define optimistic behavior, disabled states, retries, and post-success cache updates where relevant.
+- Avoid leaking transport errors directly to users; map them to useful UI copy.
+
+## Acceptance Criteria
+
+- State owner is named.
+- Data lifecycle states are handled.
+- Failure mode is visible to the user or caller.
+- Tests or manual checks cover success and failure paths.
+- Data owner, cache key/invalidation, and UI states are named.
+- Auth/session behavior is preserved.

@@ -19,11 +19,10 @@ import {
   e2eFrameworkChoices,
   cicdChoices,
   monitoringChoices,
-  ALL_SKILL_IDS,
 } from './prompt-choices.js';
 
 /**
- * Runs the full stack/IDE/skills questionnaire.
+ * Runs the full stack/IDE questionnaire.
  */
 export async function askQuestions(): Promise<UserAnswers> {
   const projectName = await input({
@@ -122,27 +121,6 @@ export async function askQuestions(): Promise<UserAnswers> {
     ideTargets = ['cursor', 'claude-code', 'vscode-copilot', 'antigravity', 'windsurf'];
   }
 
-  let skills = await checkbox({
-    message: 'Which AI skills/workflows to include?',
-    choices: [
-      { name: 'All skills', value: 'all' },
-      { name: 'plan-review (architecture review before implementation)', value: 'plan-review', checked: true },
-      { name: 'code-review (pre-merge diff review + checklist)', value: 'code-review', checked: true },
-      { name: 'qa (quality pass: build, tests, a11y, Lighthouse)', value: 'qa', checked: true },
-      { name: 'ship (commit / PR workflow)', value: 'ship', checked: true },
-      { name: 'document-release (docs after merge)', value: 'document-release' },
-      { name: 'retro (productivity retrospective)', value: 'retro' },
-      { name: 'performance-audit (CWV, bundle, images)', value: 'performance-audit' },
-      { name: 'accessibility-audit (axe, keyboard, WCAG)', value: 'accessibility-audit' },
-      { name: 'component-audit (props, complexity, Storybook)', value: 'component-audit' },
-      { name: 'dependency-audit (security, licenses, bundle impact)', value: 'dependency-audit' },
-    ],
-  });
-
-  if (skills.includes('all')) {
-    skills = [...ALL_SKILL_IDS];
-  }
-
   return {
     projectName,
     projectDescription,
@@ -161,6 +139,5 @@ export async function askQuestions(): Promise<UserAnswers> {
     monitoring,
     cicd,
     ideTargets,
-    skills,
   };
 }

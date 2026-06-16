@@ -1,8 +1,31 @@
 ---
-description: Pre-commit / pre-push quality gates
+description: Guide the setup and use of pre-commit hooks, linting, formatting, and type-checking gates in Fare-generated frontend projects.
 ---
 
-# Pre-Commit Checklist
+# Pre-Commit Quality Gates
+
+Guide the setup and use of pre-commit hooks, linting, formatting, and type-checking gates in Fare-generated frontend projects.
+
+Use this rule during the Build, Test, and Ship stages.
+
+## AI Responsibilities
+
+- Run the project's pre-commit checks before proposing a commit.
+- Confirm that linting, formatting, and type-check pass on changed files.
+- Do not bypass hooks (`--no-verify`) unless explicitly instructed and the reason is documented.
+- When adding a new package or changing config, verify that the pre-commit suite still passes.
+
+## AI Must Avoid
+
+- Committing files that fail the linter or formatter.
+- Suggesting `git commit --no-verify` as a routine workaround for hook failures.
+- Introducing lint rule exceptions (`eslint-disable`, `@ts-ignore`) without a named justification.
+
+## Stack-Specific Guidance
+
+For `lint-staged`, ensure the staged file glob patterns cover all changed file types. For type-only changes (renaming types, adding generics), run `tsc --noEmit` before committing even if lint-staged does not include it by default.
+
+### Pre-commit checklist
 
 Before opening a PR:
 
@@ -16,6 +39,12 @@ Before opening a PR:
 - Ensure Storybook builds or Chromatic (if used) is green for changed stories.
 {{/if}}
 
-## Optional CI extras
+### Optional CI extras
 
 - Lighthouse CI budgets on critical routes (document thresholds in repo).
+
+## Acceptance Criteria
+
+- All changed files pass the linter and formatter before commit.
+- Type-check passes on the changed module.
+- Pre-commit hooks are not bypassed without documented reason.

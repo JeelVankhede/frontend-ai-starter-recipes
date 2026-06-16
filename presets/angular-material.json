@@ -13,19 +13,15 @@
   "auth": "jwt-client",
   "testFramework": "jest",
   "e2eFramework": "cypress",
-  "monitoring": ["datadog-rum"],
+  "monitoring": [
+    "datadog-rum"
+  ],
   "cicd": "gitlab-ci",
-  "ideTargets": ["cursor", "claude-code", "antigravity"],
-  "skills": [
-    "plan-review",
-    "code-review",
-    "qa",
-    "ship",
-    "document-release",
-    "retro",
-    "performance-audit",
-    "accessibility-audit",
-    "component-audit",
-    "dependency-audit"
+  "ideTargets": [
+    "cursor",
+    "claude-code",
+    "vscode-copilot",
+    "antigravity",
+    "windsurf"
   ]
 }

@@ -30,6 +30,8 @@ jobs:
     permissions:
       id-token: write
       contents: write
+    env:
+      MIXPANEL_TOKEN: ${{ secrets.MIXPANEL_TOKEN }}
     steps:
       - name: Checkout main
         uses: actions/checkout@v4
