@@ -2,8 +2,6 @@
 
 ## Demo
 
-![FARE walkthrough](/walkthrough.gif)
-
 <div style="margin: 1.5rem 0;">
   <iframe
     width="100%"
