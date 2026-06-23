@@ -27,6 +27,12 @@ const CookieBanner = defineComponent({
       document.getElementById('cc-accept')?.addEventListener('click', () => {
         localStorage.setItem(CONSENT_KEY, 'accepted');
         banner.remove();
+        (window as any).mixpanel?.track?.('page_view', {
+          source: 'docs',
+          path: window.location.pathname,
+          title: document.title,
+          referrer: document.referrer,
+        });
       });
       document.getElementById('cc-decline')?.addEventListener('click', () => {
         localStorage.setItem(CONSENT_KEY, 'declined');
@@ -58,6 +64,14 @@ export default {
           referrer: document.referrer,
         });
       };
+      if (localStorage.getItem(CONSENT_KEY) === 'accepted') {
+        (window as any).mixpanel?.track?.('page_view', {
+          source: 'docs',
+          path: window.location.pathname,
+          title: document.title,
+          referrer: document.referrer,
+        });
+      }
     }
   },
 } satisfies Theme;
