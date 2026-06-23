@@ -1,5 +1,20 @@
 # Usage
 
+## Demo
+
+![FARE walkthrough](https://github.com/user-attachments/assets/0e4a4b5d-fa78-45da-af42-fce6fc047e37)
+
+<div style="margin: 1.5rem 0;">
+  <iframe
+    width="100%"
+    style="aspect-ratio: 16/9; border: none; border-radius: 8px;"
+    src="https://www.youtube.com/embed/_w5sxn0FI5Y"
+    title="FARE demo"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen>
+  </iframe>
+</div>
+
 ## Try it in 2 minutes
 
 Run the React/Vite/Tailwind preset into a throwaway folder:
