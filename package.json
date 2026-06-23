@@ -1,6 +1,6 @@
 {
   "name": "frontend-ai-starter-recipes",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Fare — Frontend Ai starter REcipes — interactive CLI for generating AI agent rules, lifecycle docs, and workflow starters for frontend projects.",
   "type": "module",
   "main": "dist/cli.js",
