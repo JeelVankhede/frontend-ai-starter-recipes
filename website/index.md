@@ -3,8 +3,8 @@ layout: home
 
 hero:
   name: <span class="decorate">F</span>rontend-<span class="decorate">A</span>i-starter-<span class="decorate">RE</span>cipes
-  text: Stop repeating your stack to AI
-  tagline: Opinionated rules, skills, and context for React, Vue, Svelte, Angular — npm package frontend-ai-starter-recipes, CLI fare.
+  text: Stop re-explaining your frontend stack to every AI agent.
+  tagline: Opinionated rules, skills, and context for React, Vue, Svelte, and Angular — one command, every adapter.
   actions:
     - theme: brand
       text: Try it in 2 minutes
